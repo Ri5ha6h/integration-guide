@@ -1,0 +1,43 @@
+# Dependencies and local package-manager data
+node_modules/
+.pnpm-store/
+.npm/
+
+# Build output and tool caches
+dist/
+dist-ssr/
+.vite/
+.turbo/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Local environment values and secrets
+.env*
+!.env.example
+!.env.sample
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local deployment state
+.vercel/
+
+# Editor and operating-system files
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
