@@ -74,9 +74,9 @@ function App() {
             }}
           />
           <footer className="page-footer">
-            <span>FIELD GUIDE / INTEGRATION SYSTEMS</span>
+            <span>AZURE AND INTEGRATION GUIDE</span>
             <span>
-              BUILT FOR THE ON-CALL AND THE CURIOUS <b>·</b> 2026
+              FOR SUPPORT TEAMS AND LEARNERS <b>·</b> 2026
             </span>
           </footer>
         </div>

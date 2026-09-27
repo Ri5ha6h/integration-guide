@@ -1,13 +1,10 @@
 export default function RouteMap() {
   return (
-    <section
-      className="route-card"
-      aria-label="A typical integration path from request to resolution"
-    >
+    <section className="route-card" aria-label="A typical request path from start to resolution">
       <div className="route-card-top">
-        <span className="eyebrow">A request, end to end</span>
+        <span className="eyebrow">How a request moves through the system</span>
         <span className="route-live">
-          <i aria-hidden="true" /> SYSTEM PATH
+          <i aria-hidden="true" /> REQUEST PATH
         </span>
       </div>
       <ol className="route-map">
@@ -16,7 +13,7 @@ export default function RouteMap() {
           <span className="node-symbol" aria-hidden="true">
             ↗
           </span>
-          <small>01 / INGRESS</small>
+          <small>01 / REQUEST</small>
           <b>Receive request</b>
           <em>Front Door · APIM</em>
         </li>
@@ -25,8 +22,8 @@ export default function RouteMap() {
           <span className="node-symbol" aria-hidden="true">
             ⌘
           </span>
-          <small>02 / LOGIC</small>
-          <b>Orchestrate</b>
+          <small>02 / WORKFLOW</small>
+          <b>Run workflow</b>
           <em>Logic Apps · Functions</em>
         </li>
         <li className="route-node node-transport">
@@ -34,7 +31,7 @@ export default function RouteMap() {
           <span className="node-symbol" aria-hidden="true">
             ⇢
           </span>
-          <small>03 / TRANSPORT</small>
+          <small>03 / MESSAGES</small>
           <b>Move work</b>
           <em>Service Bus · RabbitMQ</em>
         </li>
@@ -43,8 +40,8 @@ export default function RouteMap() {
           <span className="node-symbol" aria-hidden="true">
             ⌁
           </span>
-          <small>04 / SIGNAL</small>
-          <b>Observe</b>
+          <small>04 / MONITOR</small>
+          <b>Check health</b>
           <em>Monitor · App Insights</em>
         </li>
         <li className="route-node node-support">
@@ -52,15 +49,15 @@ export default function RouteMap() {
           <span className="node-symbol" aria-hidden="true">
             ◉
           </span>
-          <small>05 / RESPONSE</small>
-          <b>Resolve</b>
+          <small>05 / SUPPORT</small>
+          <b>Restore service</b>
           <em>Alerts · ServiceNow</em>
         </li>
       </ol>
       <div className="route-foot">
-        <span>IDENTITY + NETWORK GUARD EVERY HOP</span>
+        <span>Sign-in and network rules apply at each step.</span>
         <span className="route-key">
-          <i aria-hidden="true" /> DATA FLOW
+          <i aria-hidden="true" /> REQUEST FLOW
         </span>
       </div>
     </section>

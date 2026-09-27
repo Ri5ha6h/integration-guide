@@ -9,16 +9,16 @@ export default function TopBar({ activeGroup, query, onQueryChange, searchRef })
   return (
     <header className="topbar">
       <div className="breadcrumb">
-        <span>FIELD NOTES</span>
+        <span>GUIDE</span>
         <b>/</b>
-        <span>{sectionName ?? "SYSTEMS OVERVIEW"}</span>
+        <span>{sectionName ?? "ALL CHAPTERS"}</span>
       </div>
       <div className="search-wrap">
         <span className="search-icon" aria-hidden="true">
           ⌕
         </span>
         <label className="sr-only" htmlFor="topic-search">
-          Search concepts
+          Search topics
         </label>
         <input
           ref={searchRef}
@@ -26,9 +26,9 @@ export default function TopBar({ activeGroup, query, onQueryChange, searchRef })
           type="search"
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Find a concept…"
+          placeholder="Search topics…"
         />
-        <kbd aria-hidden="true">⌘ K</kbd>
+        <kbd aria-hidden="true">⌘ K / Ctrl K</kbd>
       </div>
     </header>
   );

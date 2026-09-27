@@ -7,7 +7,7 @@ export default function GuideHero() {
       <section className="hero-section" aria-labelledby="hero-title">
         <div className="hero-copy">
           <div className="hero-eyebrow">
-            <span className="eyebrow-dot" /> A PRACTICAL MAP FOR COMPLEX SYSTEMS
+            <span className="eyebrow-dot" /> A GUIDE TO CONNECTED SYSTEMS
           </div>
           <h1 id="hero-title">
             When systems
@@ -15,31 +15,31 @@ export default function GuideHero() {
             <i>need to talk.</i>
           </h1>
           <p className="hero-deck">
-            A field guide to Azure integration, secure networks, message flows, EDI, and the people
-            who keep them running.
+            A guide to Azure integration, network security, messages, EDI, and the support teams
+            that keep systems running.
           </p>
-          <a className="hero-link" href="#concepts">
-            Find your way through <span aria-hidden="true">↓</span>
+          <a className="hero-link" href="#topics">
+            Browse topics <span aria-hidden="true">↓</span>
           </a>
         </div>
         <RouteMap />
       </section>
       <section className="guide-strip" aria-label="How to use this guide">
         <div className="strip-label">
-          A useful
+          How it
           <br />
-          mental model
+          fits together
         </div>
         <p>
-          Services <b>connect</b> the work. Identity and networks <b>bound</b> it. Messages{" "}
-          <b>carry</b> it. Operations <b>restore</b> it.
+          Services <b>connect</b> systems. Sign-in and network rules <b>control</b> access. Messages{" "}
+          <b>move</b> work. Support teams <b>restore</b> service.
         </p>
         <div className="strip-count">
           <strong>{topics.length}</strong>
           <span>
-            concepts
+            topics
             <br />
-            across {chapters.length} practices
+            in {chapters.length} chapters
           </span>
         </div>
       </section>

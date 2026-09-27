@@ -3,12 +3,12 @@ import { findChapter, topics } from "../utils/topicCatalog.js";
 import RichText from "./RichText.jsx";
 
 const notes = [
-  ["definition", "In plain terms"],
+  ["definition", "What it is"],
   ["purpose", "What it does"],
-  ["usedWhen", "Where it fits"],
-  ["why", "Why teams use it"],
+  ["usedWhen", "When to use it"],
+  ["why", "Why it helps"],
   ["example", "Example"],
-  ["operatorNote", "On the operations desk"],
+  ["operatorNote", "Support notes"],
 ];
 
 export default function TopicDrawer({ item, onClose }) {
@@ -61,7 +61,7 @@ export default function TopicDrawer({ item, onClose }) {
             ref={closeButtonRef}
             className="close-button"
             onClick={onClose}
-            aria-label="Close concept details"
+            aria-label="Close topic details"
           >
             ×
           </button>
@@ -91,7 +91,7 @@ export default function TopicDrawer({ item, onClose }) {
         </div>
         {item.sources?.length > 0 && (
           <section className="drawer-sources" aria-labelledby="source-heading">
-            <h3 id="source-heading">Read the primary references</h3>
+            <h3 id="source-heading">Sources</h3>
             <ul>
               {item.sources.map((source) => (
                 <li key={source.url}>
@@ -106,7 +106,7 @@ export default function TopicDrawer({ item, onClose }) {
         )}
         <div className="drawer-bottom">
           <span>
-            FIELD NOTE / {chapter.code}-{String(topics.indexOf(item) + 1).padStart(2, "0")}
+            TOPIC / {chapter.code}-{String(topics.indexOf(item) + 1).padStart(2, "0")}
           </span>
           <button onClick={onClose}>
             Back to the guide <span aria-hidden="true">↗</span>
@@ -117,7 +117,7 @@ export default function TopicDrawer({ item, onClose }) {
         type="button"
         className="drawer-backdrop"
         onClick={onClose}
-        aria-label="Dismiss this dialog"
+        aria-label="Close topic details"
       />
     </div>
   );
