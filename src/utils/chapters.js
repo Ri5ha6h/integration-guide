@@ -4,7 +4,7 @@ export const chapters = [
     label: "Azure integration",
     short: "Integration",
     code: "AZ",
-    color: "teal",
+    color: "blue",
   },
   {
     id: "security",
@@ -18,20 +18,20 @@ export const chapters = [
     label: "Messaging and integration",
     short: "Messaging",
     code: "MQ",
-    color: "orange",
+    color: "blue",
   },
   {
     id: "operations",
     label: "IT support operations",
     short: "Support operations",
     code: "OP",
-    color: "violet",
+    color: "blue",
   },
   {
     id: "edi",
     label: "EDI and supply chain",
     short: "EDI",
     code: "EDI",
-    color: "amber",
+    color: "blue",
   },
 ];

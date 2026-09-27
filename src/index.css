@@ -2,24 +2,22 @@
 
 :root {
   font-family: "DM Sans", sans-serif;
-  color: #18343d;
-  background: #edf3f2;
+  color: var(--ink-blue);
+  background: var(--mist-blue);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-optical-sizing: auto;
   font-weight: 400;
-  --ink: #18343d;
-  --harbor: #102a36;
-  --teal: #117f7a;
-  --teal-dark: #0d6564;
-  --mist: #edf3f2;
-  --line: #d5e0dd;
-  --muted: #788c8c;
-  --orange: #d5744d;
-  --blue: #5b83a0;
-  --violet: #8873a2;
+  --ink-blue: #10243a;
+  --navy-blue: #1d4266;
+  --signal-blue: #2e6fa8;
+  --steel-blue: #4b739c;
+  --ice-blue: #bdd3e8;
+  --mist-blue: #f1f6fb;
+  --ink: var(--ink-blue);
+  --harbor: var(--ink-blue);
   --mono: "IBM Plex Mono", monospace;
   --display: "Newsreader", Georgia, serif;
 }
@@ -46,15 +44,15 @@ button {
 button:focus-visible,
 a:focus-visible,
 input:focus-visible {
-  outline: 3px solid #ee9b70;
+  outline: 3px solid var(--signal-blue);
   outline-offset: 3px;
 }
 a {
   color: inherit;
 }
 ::selection {
-  background: #c7e5df;
-  color: var(--harbor);
+  background: var(--ice-blue);
+  color: var(--ink-blue);
 }
 .sr-only {
   position: absolute;
