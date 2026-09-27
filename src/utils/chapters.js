@@ -26,5 +26,12 @@ export const chapters = [
     "short": "Support operations",
     "code": "OP",
     "color": "violet"
+  },
+  {
+    "id": "edi",
+    "label": "EDI & supply-chain exchange",
+    "short": "EDI",
+    "code": "EDI",
+    "color": "amber"
   }
 ];
