@@ -25,6 +25,11 @@
 .color-orange { color: #eab18d !important; background: rgba(186,98,62,.19) !important; }
 .color-violet { color: #ccb9dc !important; background: rgba(117,92,144,.22) !important; }
 .color-amber { color: #e7cb91 !important; background: rgba(164,129,64,.2) !important; }
+.chapter-code.color-teal { color: #286c60 !important; background: #e1eee8 !important; }
+.chapter-code.color-blue { color: #3c6780 !important; background: #e4edf2 !important; }
+.chapter-code.color-orange { color: #9a5133 !important; background: #f3e5dc !important; }
+.chapter-code.color-violet { color: #654c7a !important; background: #eee9f2 !important; }
+.chapter-code.color-amber { color: #735920 !important; background: #f1e8d2 !important; }
 .rail-bottom { margin-top: auto; }
 .rail-bottom .rail-rule { margin: 0 0 20px; }
 .rail-callout { display: flex; gap: 11px; padding: 0 6px; }
