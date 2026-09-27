@@ -67,9 +67,9 @@
 .route-card-top .eyebrow { font-size: inherit; }
 .route-live { display: inline-flex; align-items: center; gap: 6px; color: #9db7b2; }
 .route-live i { width: 5px; height: 5px; border-radius: 50%; background: #8abfa9; box-shadow: 0 0 0 3px rgba(138,191,169,.12); }
-.route-map { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(87px, auto)); gap: 13px 17px; min-height: 187px; margin: 10px 0 8px; padding: 0; list-style: none; }
+.route-map { --route-gap-x: 17px; --route-gap-y: 13px; --route-gap-x-half: 8.5px; --route-gap-y-half: 6.5px; position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(87px, auto)); gap: var(--route-gap-y) var(--route-gap-x); min-height: 187px; margin: 10px 0 8px; padding: 0; list-style: none; }
 .route-node { position: relative; display: flex; min-width: 0; min-height: 82px; flex-direction: column; padding: 9px 10px; border: 1px solid rgba(146,189,178,.34); border-radius: 3px; background: rgba(18,51,61,.92); box-shadow: 0 6px 18px rgba(5,19,25,.16); }
-.route-node::after { position: absolute; color: #9bd1c2; content: '→'; font: 13px/1 var(--mono); }
+.route-node::after { position: absolute; display: grid; width: 13px; height: 13px; place-items: center; color: #9bd1c2; content: '→'; font: 13px/1 var(--mono); }
 .node-indicator { position: absolute; top: 10px; right: 9px; width: 4px; height: 4px; border: 1px solid #80c3b4; border-radius: 50%; }
 .node-symbol { display: grid; width: 19px; height: 19px; margin-bottom: 4px; place-items: center; border-radius: 2px; background: rgba(136,197,181,.12); color: #98d0c0; font-size: 14px; }
 .route-node small { color: #91aaa7; font: 7px var(--mono); letter-spacing: .07em; white-space: nowrap; }
@@ -80,9 +80,9 @@
 .node-transport { grid-column: 3; grid-row: 1; }
 .node-observe { grid-column: 3; grid-row: 2; }
 .node-support { grid-column: 2; grid-row: 2; }
-.node-ingress::after, .node-orchestrate::after, .node-transport::after { top: 50%; right: -13px; transform: translateY(-50%); }
-.node-transport::after { bottom: -17px; left: 50%; transform: translateX(-50%); color: #dfa17d; content: '↓'; }
-.node-observe::after { top: 50%; left: -16px; transform: translateY(-50%); color: #9bd1c2; content: '←'; }
+.node-ingress::after, .node-orchestrate::after { top: 50%; left: calc(100% + var(--route-gap-x-half)); transform: translate(-50%, -50%); }
+.node-transport::after { top: calc(100% + var(--route-gap-y-half)); left: 50%; transform: translate(-50%, -50%); color: #dfa17d; content: '↓'; }
+.node-observe::after { top: 50%; right: calc(100% + var(--route-gap-x-half)); transform: translate(50%, -50%); color: #9bd1c2; content: '←'; }
 .node-support::after { content: none; }
 .route-foot { padding-top: 7px; border-top: 1px solid rgba(174,207,198,.12); font-size: 7px; }
 .route-key { display: inline-flex; align-items: center; gap: 6px; }
@@ -205,22 +205,17 @@
   .hero-deck { font-size: 12px; }
   .route-card { min-height: 258px; padding: 15px 10px 11px; }
   .route-card-top, .route-foot { font-size: 6px; }
-  .route-map { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(74px, auto)); gap: 13px 18px; min-height: 0; margin: 10px 0 12px; overflow: visible; }
+  .route-map { --route-gap-x: 18px; --route-gap-y: 13px; --route-gap-x-half: 9px; --route-gap-y-half: 6.5px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(74px, auto)); min-height: 0; margin: 10px 0 12px; overflow: visible; }
   .route-node { min-height: 74px; padding: 7px 8px; }
   .node-ingress { grid-column: 1; grid-row: 1; }
   .node-orchestrate { grid-column: 2; grid-row: 1; }
   .node-transport { grid-column: 2; grid-row: 2; }
   .node-observe { grid-column: 1; grid-row: 2; }
   .node-support { grid-column: 1; grid-row: 3; }
-  .node-ingress { grid-column: 1; grid-row: 1; }
-  .node-orchestrate { grid-column: 2; grid-row: 1; }
-  .node-transport { grid-column: 2; grid-row: 2; }
-  .node-observe { grid-column: 1; grid-row: 2; }
-  .node-support { grid-column: 1; grid-row: 3; }
-  .node-ingress::after { top: 50%; right: -16px; transform: translateY(-50%); content: '→'; color: #9bd1c2; }
-  .node-orchestrate::after { top: auto; right: 50%; bottom: -16px; transform: translateX(50%); content: '↓'; color: #dfa17d; }
-  .node-transport::after { top: 50%; right: auto; bottom: auto; left: -16px; transform: translateY(-50%); content: '←'; color: #9bd1c2; }
-  .node-observe::after { top: auto; right: 50%; bottom: -16px; left: auto; transform: translateX(50%); color: #dfa17d; content: '↓'; }
+  .node-ingress::after { top: 50%; left: calc(100% + var(--route-gap-x-half)); transform: translate(-50%, -50%); content: '→'; color: #9bd1c2; }
+  .node-orchestrate::after { top: calc(100% + var(--route-gap-y-half)); right: auto; left: 50%; transform: translate(-50%, -50%); content: '↓'; color: #dfa17d; }
+  .node-transport::after { top: 50%; right: auto; left: calc(100% + var(--route-gap-x-half)); transform: translate(-50%, -50%); content: '←'; color: #9bd1c2; }
+  .node-observe::after { top: calc(100% + var(--route-gap-y-half)); right: auto; left: 50%; transform: translate(-50%, -50%); content: '↓'; color: #dfa17d; }
   .route-node small { font-size: 6px; }
   .route-node b { font-size: 9px; }
   .route-node em { font-size: 7px; }
