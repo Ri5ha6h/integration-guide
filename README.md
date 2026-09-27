@@ -1,6 +1,6 @@
 # Signal / Room
 
-A searchable field guide to Azure integration, security and networking, messaging patterns, and ITSM support operations.
+A searchable field guide to Azure integration, security and networking, messaging patterns, EDI, and ITSM support operations.
 
 ## Start the app
 
@@ -15,4 +15,15 @@ pnpm dev
 pnpm build
 ```
 
-The concept library lives in `src/data.js`. Each entry includes a plain-language definition, purpose, common use, reason to use it, and an operations note. The React interface groups those entries into four chapters and supports filtering, full-text search, keyboard search (`⌘K` / `Ctrl+K`), and concept detail panels.
+## Formatting
+
+Run Oxfmt with its default settings, or check that files are formatted:
+
+```sh
+pnpm format
+pnpm format:check
+```
+
+The guide is organized by chapter under `src/utils/topics/`; `src/utils/topicCatalog.js` brings the entries together for the interface. Shared chapter metadata lives in `src/utils/chapters.js`. Each topic explains what it is, why and where it is used, includes a practical example, and adds operational guidance and primary references where applicable.
+
+The UI is split into focused components under `src/components/`. The app supports chapter filters, full-text search (including examples and operations notes), keyboard search (`⌘K` / `Ctrl+K`), and accessible concept detail panels.

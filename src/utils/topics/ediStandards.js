@@ -1,0 +1,150 @@
+import { createTopic } from "../createTopic.js";
+
+const topic = (title, details) => createTopic("edi", title, details);
+
+export const ediStandardsTopics = [
+  topic("Electronic Data Interchange (EDI)", {
+    summary: "A standards-based exchange of structured business documents between organizations.",
+    definition:
+      "EDI is computer-to-computer exchange of agreed business messages using shared structures, identifiers, code lists, and partner rules. X12, UN/EDIFACT, EANCOM, XML, and API profiles are examples of exchange formats; EDI is not one file extension or transport protocol.",
+    purpose:
+      "Let business systems validate and process orders, shipment notices, invoices, inventory updates, and other documents without manual rekeying.",
+    usedWhen:
+      "Use it across trading partners such as retailers, suppliers, carriers, warehouses, 3PLs, customs brokers, and financial institutions when the exchange contract is standardized or partner-profiled.",
+    why: "A known message structure and partner agreement make routine transactions automatable and reconcilable across separate companies.",
+    example:
+      "A retailer sends a purchase-order message; the supplier returns a business response, later sends an advance shipment notice, and finally an invoice, all linked by agreed partner and order references.",
+    operatorNote:
+      "Confirm the exact syntax, release, message, implementation guide, partner identifiers, transport, acknowledgment policy, and business rules. A `.edi` or `.txt` filename alone does not identify how a payload should be parsed.",
+    sources: [
+      { label: "GS1 EDI overview", url: "https://www.gs1.org/standards/edi" },
+      { label: "X12 transaction sets", url: "https://x12.org/products/transaction-sets" },
+      { label: "UNECE UN/EDIFACT", url: "https://unece.org/trade/uncefact/unedifact" },
+    ],
+  }),
+  topic("Common EDI messages & business flows", {
+    summary:
+      "Business documents that describe requests, responses, shipments, events, and settlement.",
+    definition:
+      "An EDI document is a business message—such as an X12 transaction set or EDIFACT message—sent at a particular point in a process. Similar labels across standards can be functional neighbors without being structurally or semantically identical.",
+    purpose:
+      "Exchange a specific business fact or request using a contract both trading partners can interpret.",
+    usedWhen:
+      "Choose messages from the partner's profile for order-to-cash, transport tender/status, warehouse, inventory, or customs flows; validate the applicable release and direction.",
+    why: "Naming the actual business event prevents planned instructions from being mistaken for later facts such as shipment, receipt, or payment.",
+    example:
+      "A buyer sends X12 `850` or EDIFACT `ORDERS`; the seller may answer with `855`/`ORDRSP`; a shipper reports packed and dispatched goods using `856`/`DESADV`; `810`/`INVOIC` requests payment. The partner guide defines exact use.",
+    operatorNote:
+      "Keep order number/line, shipment or consignment reference, SSCC, invoice number, and partner identifiers with their qualifiers. An ASN can cover multiple orders and nested packages; one file is not necessarily one order or one shipment.",
+    sources: [
+      { label: "X12 supply-chain flow", url: "https://x12.org/flow/supply-chain" },
+      {
+        label: "UNECE EDIFACT directories",
+        url: "https://unece.org/trade/uncefact/unedifact/download",
+      },
+    ],
+  }),
+  topic("X12 transaction sets", {
+    summary: "Numbered business messages defined by the ASC X12 standards family.",
+    definition:
+      "An X12 transaction set defines a business purpose and the ordered segments and elements used to represent it. The number—such as 850—identifies the set, but version, industry guide, qualifiers, and trading-partner rules determine the actual interpretation.",
+    purpose:
+      "Provide a common structure for business exchanges in supply chain, transportation, finance, warehouse, and other industries.",
+    usedWhen:
+      "Use the transaction set selected by the partner's implementation guide; do not infer the supported use from a familiar set number alone.",
+    why: "A set gives both parties a common message vocabulary, while versioned guides narrow the broad standard to the fields and scenarios they actually exchange.",
+    example:
+      "Common logistics sets include `204` motor-carrier tender, `990` tender response, `214` transport status, `850` purchase order, `856` ASN, `810` invoice, and `940`/`945` warehouse instruction/advice.",
+    operatorNote:
+      "Resolve the transaction-set number and version from the interchange/group headers; preserve segment context and qualifiers. Use the correct guide before interpreting optional loops, codes, quantities, or dates.",
+    sources: [
+      { label: "X12 transaction-set directory", url: "https://x12.org/products/transaction-sets" },
+      { label: "X12 supply chain", url: "https://ecommerce.x12.org/industry/supply-chain" },
+    ],
+  }),
+  topic("X12 envelopes, versions & control numbers", {
+    summary: "Nested interchange, group, and transaction envelopes that frame X12 payloads.",
+    definition:
+      "X12 commonly nests `ST…SE` transaction sets inside `GS…GE` functional groups inside `ISA…IEA` interchanges. Headers identify participants and syntax/version context; trailers carry matching control references and counts used to validate the package.",
+    purpose:
+      "Delimit related transactions, tell the receiver how to parse them, and detect truncation or mismatched control totals.",
+    usedWhen:
+      "Use the declared delimiters, sender/receiver IDs, group version (commonly GS08), transaction ID, and partner profile when selecting a parser and guide.",
+    why: "A syntactically valid-looking `850` can still be the wrong release or trading-partner subset; matching controls also help identify duplicate, incomplete, or misrouted exchanges.",
+    example:
+      "An interchange may have an `ISA` header and `IEA` trailer around a `GS` purchase-order group containing several `ST*850` transactions; each `SE`, `GE`, and `IEA` count/control reference must match its corresponding header.",
+    operatorNote:
+      "Read separators from ISA rather than hard-coding `*` and `~`. Validate sender/receiver qualifiers, control-number echoes, declared segment and transaction counts, version, and duplicate policy before business processing.",
+    sources: [
+      { label: "X12 examples", url: "https://x12.org/examples" },
+      {
+        label: "X12 implementation guides",
+        url: "https://x12.org/index.php/products/technical-reports",
+      },
+    ],
+  }),
+  topic("UN/EDIFACT message structure", {
+    summary:
+      "A release-specific international EDI syntax built from service envelopes and ordered segments.",
+    definition:
+      "UN/EDIFACT defines message types, directories, code lists, and ISO 9735 syntax rules. An interchange uses `UNB…UNZ`, may group messages in `UNG…UNE`, and frames each message with `UNH…UNT`; the message header names type, version, release, and controlling agency.",
+    purpose:
+      "Represent structured trade and transport messages across international and multi-industry exchanges.",
+    usedWhen:
+      "Parse using the syntax version, directory release, partner guide or EANCOM profile, and actual separators declared by `UNA` or defined by the applicable syntax rules.",
+    why: "Release-specific directories define segment order, mandatory/conditional status, repeats, and code lists, so interpreting tags without version and qualifier context risks incorrect mappings.",
+    example:
+      "`UNH+1+IFTSTA:D:24A:UN' … UNT+…+1'` illustrates a transport-status message header and matching message reference; business segments and outer `UNB/UNZ` controls are omitted here.",
+    operatorNote:
+      "Validate interchange/group/message counts and reference echoes, then resolve the message type plus version/release/agency. Common separators are `+`, `:`, and `'`, but honor `UNA` and the agreed syntax instead of assuming defaults.",
+    sources: [
+      { label: "UNECE UN/EDIFACT", url: "https://unece.org/trade/uncefact/unedifact" },
+      {
+        label: "UNECE EDIFACT syntax rules",
+        url: "https://unece.org/fileadmin/DAM/trade/edifact/untdid/d422_s.htm",
+      },
+    ],
+  }),
+  topic("Partner implementation guides & profiles", {
+    summary: "A partner-specific contract that narrows a broad standard to one exchange.",
+    definition:
+      "An implementation guide or MIG specifies the standard family and release, message direction, required and conditional fields, loops, qualifiers, code values, identifiers, transport settings, acknowledgment expectations, and timing for a relationship.",
+    purpose:
+      "Turn a large standards catalog into a precise agreement that both parties can implement and validate consistently.",
+    usedWhen:
+      "Use the current trading-partner guide during onboarding, mapping, change review, certification testing, and production support.",
+    why: "Two partners can both claim to use the same `850` or `ORDERS` yet differ in version, mandatory fields, codes, and business process; the profile defines their interoperable subset.",
+    example:
+      "A guide states that partner X accepts only X12 4010 850s, requires a ship-to `N1` loop and specific unit codes, expects a 997 within an agreed interval, and uses a named AS2 certificate.",
+    operatorNote:
+      "Store the approved guide/version with its owner and effective date. Test valid, invalid, boundary, and duplicate cases; coordinate profile changes with the partner instead of silently upgrading a directory release.",
+    sources: [
+      {
+        label: "X12 technical reports and implementation guides",
+        url: "https://x12.org/index.php/products/technical-reports",
+      },
+      { label: "GS1 EDI implementation", url: "https://www.gs1.org/standards/edi/implementation" },
+    ],
+  }),
+  topic("EDI acknowledgment layers", {
+    summary: "Separate receipts and business responses that answer different questions.",
+    definition:
+      "Transport receipts, syntax/control acknowledgments, application validations, and business responses are distinct stages. For example, an AS2 MDN concerns the received AS2 message; X12 997/999 or EDIFACT CONTRL concern EDI syntax/implementation checks; an 855/ORDRSP expresses a business response.",
+    purpose: "Show how far an exchange progressed and which system or partner must act next.",
+    usedWhen:
+      "Agree which receipts are required, what each one proves, response timing, and who retries or investigates a missing acknowledgment.",
+    why: "A transport receipt does not prove successful parsing, business acceptance, shipment, or payment; treating it as those outcomes can conceal lost work.",
+    example:
+      "A partner returns a signed MDN, then a 997 reports that an X12 group parsed, then a separate 855 accepts or changes the purchase order. Each event is tracked independently.",
+    operatorNote:
+      "Correlate each acknowledgment to the source message/control number and partner; distinguish negative syntax response from business rejection and from a missing response. Do not infer success from HTTP 200 or `202 Accepted` alone.",
+    sources: [
+      { label: "RFC 4130: AS2 and MDN semantics", url: "https://www.rfc-editor.org/rfc/rfc4130" },
+      { label: "X12 transaction-set directory", url: "https://x12.org/products/transaction-sets" },
+      {
+        label: "UNECE EDIFACT rules",
+        url: "https://unece.org/trade/uncefact/unedifact/part-4-rules-electronic-data-interchange-administration-commerce-and-transport",
+      },
+    ],
+  }),
+];
