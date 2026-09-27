@@ -73,7 +73,7 @@ export default function TopicDrawer({ item, onClose }) {
         )}
         <div className="drawer-bottom"><span>FIELD NOTE / {chapter.code}-{String(topics.indexOf(item) + 1).padStart(2, "0")}</span><button onClick={onClose}>Back to the guide <span aria-hidden="true">↗</span></button></div>
       </section>
-      <button type="button" className="drawer-backdrop" onClick={onClose} aria-label="Close concept details" />
+      <button type="button" className="drawer-backdrop" onClick={onClose} aria-label="Dismiss this dialog" />
     </div>
   );
 }
