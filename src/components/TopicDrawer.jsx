@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { findChapter, topics } from "../utils/topicCatalog.js";
+import RichText from "./RichText.jsx";
 
 const notes = [
   ["definition", "In plain terms"],
@@ -41,7 +42,7 @@ export default function TopicDrawer({ item, onClose }) {
   };
 
   return (
-    <div className="drawer-shade" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+    <div className="drawer-shade">
       <section ref={dialogRef} className="topic-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" onKeyDown={keepFocusInside}>
         <div className="drawer-topline">
           <span className={`chapter-code color-${chapter.color}`}>{chapter.code}</span>
@@ -56,7 +57,7 @@ export default function TopicDrawer({ item, onClose }) {
           {notes.filter(([key]) => item[key]).map(([key, label], index) => (
             <article className={`detail-note ${key === "example" ? "detail-example" : ""}`} key={key}>
               <span className="detail-index">{String(index + 1).padStart(2, "0")}</span>
-              <div><h3>{label}</h3><p>{item[key]}</p></div>
+              <div><h3>{label}</h3><p><RichText>{item[key]}</RichText></p></div>
             </article>
           ))}
         </div>
@@ -72,6 +73,7 @@ export default function TopicDrawer({ item, onClose }) {
         )}
         <div className="drawer-bottom"><span>FIELD NOTE / {chapter.code}-{String(topics.indexOf(item) + 1).padStart(2, "0")}</span><button onClick={onClose}>Back to the guide <span aria-hidden="true">↗</span></button></div>
       </section>
+      <button type="button" className="drawer-backdrop" onClick={onClose} aria-label="Close concept details" />
     </div>
   );
 }
