@@ -4,18 +4,18 @@ const topic = (title, details) => createTopic("edi", title, details);
 
 export const ediSupplyChainTopics = [
   topic("AS2, SFTP & EDI transport", {
-    summary: "Transport options move a payload; they do not define the EDI business meaning.",
+    summary: "AS2 and SFTP move EDI files; they do not define what the documents mean.",
     definition:
-      "AS2 packages business data for transfer over HTTP(S) and can use S/MIME signing, encryption, and Message Disposition Notifications. SFTP transfers files over SSH. Both carry payloads such as X12 or EDIFACT, but they produce different receipt and security evidence.",
+      "AS2 sends business data over HTTP or HTTPS and can sign and encrypt it. It can also return a Message Disposition Notification (MDN). SFTP sends files over SSH. Both can carry X12 or EDIFACT files, but each gives different security and receipt information.",
     purpose:
-      "Move partner documents between endpoints using an agreed network route, identity model, security profile, and reliability convention.",
+      "Move partner documents between systems using agreed network paths, identities, security rules, and delivery steps.",
     usedWhen:
-      "Use AS2 for direct B2B exchanges that need message-level security and agreed MDNs; use SFTP for scheduled file handoffs where both sides agree on keys, directories, and completion signals.",
-    why: "Separating transport from payload lets partners choose a delivery channel without changing the message standard, while keeping its operational evidence distinct.",
+      "Use AS2 for direct partner exchanges that need message signing, encryption, and agreed MDNs. Use SFTP for planned file transfers when both sides agree on SSH keys, folders, and completion signals.",
+    why: "Partners can change how they send a file without changing the EDI message rules. Keep transport receipts separate from business replies.",
     example:
-      "For AS2, record the Message-ID and signed MDN alongside the payload hash. For SFTP, upload to a temporary filename and rename to the agreed final name only after the transfer completes, if the host supports the convention.",
+      "For AS2, save the Message-ID and signed MDN with the file hash. For SFTP, upload under a temporary name and rename it when the transfer is complete, if the server supports this method.",
     operatorNote:
-      "For AS2, correlate the MDN but do not treat it as business acceptance. For SFTP, verify and pin the SSH host key, avoid disabling host-key checks, prevent partial-file pickup, and agree on archive/error folders, duplicate handling, and file naming.",
+      "For AS2, match the MDN to the file; it does not prove business acceptance. For SFTP, check and trust the server host key. Prevent early pickup of partial files, and agree on file names, folders, archives, errors, and duplicate handling.",
     sources: [
       {
         label: "RFC 4130: MIME-based secure EDI over HTTP",
@@ -24,20 +24,20 @@ export const ediSupplyChainTopics = [
       { label: "OpenSSH protocol specifications", url: "https://www.openssh.com/specs.html" },
     ],
   }),
-  topic("EDI-to-canonical data mapping", {
+  topic("EDI mapping to a shared internal model", {
     summary:
-      "Transform partner syntax into an application model without discarding business meaning.",
+      "Convert a partner's EDI into a shared internal data model and keep its business meaning.",
     definition:
-      "A mapping parses a selected partner version/profile and converts segments and qualifiers into an internal model. A canonical model can normalize equivalent partner structures, but should retain source provenance and distinctions needed for audit, outbound mapping, or reconciliation.",
+      "A mapping reads one partner's standard and version, then converts its segments and qualifiers into a shared internal model. Keep source details that are needed for audit, replies, or matching the original document.",
     purpose:
-      "Let business applications use a consistent internal shape while partner adapters handle external syntax and guide differences.",
+      "Give business apps one internal data shape while partner-specific maps handle differences in EDI syntax and rules.",
     usedWhen:
-      "Use it when applications consume JSON/XML/domain records instead of raw EDI or several trading partners represent the same concepts differently.",
-    why: "A stable internal contract reduces partner-specific branching in downstream systems, provided the mapping preserves identifiers, hierarchy, repeated structures, and source values.",
+      "Use it when apps need JSON, XML, or business records instead of raw EDI, or when several partners describe the same information in different ways.",
+    why: "A shared internal model reduces partner-specific rules in other systems. The map must still keep IDs, parent-child groups, repeated fields, and source values.",
     example:
-      "Map an ASN into `{shipmentId, orders: [], handlingUnits: [{sscc, children: [{gtin, quantity}]}]}` and retain the X12/EDIFACT source version, segment path, qualifier, and original payload reference.",
+      "Map a shipment notice into shipment, order, and package records. Keep each SSCC, product ID, quantity, source version, segment location, qualifier, and a link to the original file.",
     operatorNote:
-      "Keep the raw interchange securely; preserve qualifiers with values, loops as arrays, package parents/children, IDs with leading zeros as strings, precise decimal values, time zone/qualifier meaning, and the difference between omitted, empty, zero, and unknown.",
+      "Keep the original file secure. Keep qualifiers with values, repeated groups as lists, package nesting, IDs with leading zeros as text, exact decimal amounts, and time-zone meaning. Tell a missing value from an empty, zero, or unknown value.",
     sources: [
       { label: "X12 transaction-set examples", url: "https://x12.org/examples" },
       {
@@ -47,19 +47,18 @@ export const ediSupplyChainTopics = [
     ],
   }),
   topic("Supply-chain identifiers: GTIN, GLN & SSCC", {
-    summary:
-      "Standard identifiers that connect products, trading parties, locations, and logistic units.",
+    summary: "Standard IDs for products, organizations and places, and shipping units.",
     definition:
-      "GTIN identifies a trade item at a packaging level; GLN identifies a party or location; SSCC identifies an individual logistics unit such as a pallet or parcel. GSIN and GINC can identify broader shipment and consignment groupings when adopted by the trading partners.",
+      "GTIN identifies a product at a packaging level. GLN identifies an organization or place. SSCC identifies one shipping unit, such as a pallet or parcel. Partners may also use GSIN or GINC to identify a shipment or consignment.",
     purpose:
-      "Link electronic order and shipment records with products, physical packages, labels, scan events, and delivery locations.",
+      "Connect orders and shipment records to products, packages, labels, scans, and delivery places.",
     usedWhen:
-      "Use the identifier and qualifier agreed for each partner and business context; carry the same unit/party identities through the order, ASN, label, carrier, and receiving process.",
-    why: "Shared identifiers reduce manual matching between a document and what is physically handled, but each key answers a different identity question.",
+      "Use the ID and qualifier agreed for that partner and task. Keep the same product, party, and package IDs through the order, shipment notice, label, carrier, and receiving steps.",
+    why: "Shared IDs help match business documents to real products and packages. Each ID has a different purpose.",
     example:
-      "An 856/DESADV reports a pallet SSCC and the GTIN plus quantity of the cases nested on it; the ship-to GLN identifies the receiving location.",
+      "An 856 or DESADV lists a pallet's SSCC and the GTIN and quantity of the cases on it. The ship-to GLN identifies the receiving place.",
     operatorNote:
-      "Treat identifiers as strings, retain their issuing scheme/qualifier, and validate check digit/length rules where specified. Do not substitute a PO, tracking number, GTIN, or SSCC for one another because all are numeric-looking.",
+      "Store IDs as text, keep their type or qualifier, and check length and check digits when required. Do not swap a purchase order, tracking number, GTIN, and SSCC because they look like numbers.",
     sources: [
       { label: "GS1 General Specifications", url: "https://ref.gs1.org/standards/genspecs/" },
       {
@@ -68,20 +67,19 @@ export const ediSupplyChainTopics = [
       },
     ],
   }),
-  topic("EPCIS event visibility alongside EDI", {
-    summary:
-      "Event data records what happened to an identified object; EDI documents exchange requests and transaction facts.",
+  topic("Supply-chain events: EPCIS and EDI", {
+    summary: "EPCIS records events about identified goods; EDI exchanges business documents.",
     definition:
-      "GS1 EPCIS is a standard for capturing and sharing visibility events about objects, locations, business steps, and time. EDI messages such as an ASN describe a business document or shipment notice; an EPCIS event describes an observed event such as packing, shipping, receiving, or movement.",
+      "GS1 EPCIS is a standard for sharing when and where an object was seen and what happened to it. An EDI message such as a shipment notice describes a business document or shipment. An EPCIS event records an observation such as packing, shipping, receiving, or moving goods.",
     purpose:
-      "Add event-level visibility and traceability to order, shipment, and receiving exchanges without treating events as replacements for the documents.",
+      "Add event history to orders and shipment records while keeping event data and business documents distinct.",
     usedWhen:
-      "Use EPCIS when multiple parties need interoperable supply-chain event history tied to GTINs, SSCCs, locations, and business context.",
-    why: "An ASN may say what the sender dispatched, while later scan events can show when a logistic unit was loaded, received, or moved and where that observation occurred.",
+      "Use EPCIS when partners need to share supply-chain events linked to products, shipping units, places, and business steps.",
+    why: "A shipment notice says what the sender reports as shipped. Later scan events can show when and where a package was loaded, received, or moved.",
     example:
-      "Correlate an 856/DESADV containing pallet `SSCC=<assigned-logistic-unit-id>` with EPCIS events recording packing at a warehouse, shipping at a dock, and receiving at the retailer.",
+      "Match an 856 or DESADV that lists a pallet's SSCC with EPCIS events for packing at a warehouse, shipping at a dock, and receipt at a retailer.",
     operatorNote:
-      "Keep object and location identifiers stable, validate event time zone/business-step/location meaning, and link source transactions to event records. Reconcile missing or out-of-order events against the physical scan and partner process.",
+      "Keep product and location IDs consistent. Check event time zone, business step, and place. Link events to source documents, and compare missing or out-of-order events with scans and partner records.",
     sources: [
       { label: "GS1 EPCIS standard", url: "https://ref.gs1.org/standards/epcis/" },
       {
@@ -91,18 +89,17 @@ export const ediSupplyChainTopics = [
     ],
   }),
   topic("EDI onboarding, reconciliation & recovery", {
-    summary: "The controls that make a partner connection predictable before and after go-live.",
+    summary: "Steps to set up, check, and recover an EDI connection with a partner.",
     definition:
-      "EDI operations span partner identity and guide setup, transport/certificate exchange, test cases, layered validation and acknowledgments, production monitoring, business reconciliation, duplicate/correction handling, and retained audit evidence.",
-    purpose:
-      "Prove the complete exchange path works for the agreed message and business process, then detect and recover gaps without losing or duplicating transactions.",
+      "EDI operations include partner IDs and guide setup, transport and certificate exchange, tests, message checks and replies, monitoring, business matching, duplicate and correction handling, and audit records.",
+    purpose: "Prove the full exchange works, then find and fix missing or repeated transactions.",
     usedWhen:
-      "Use an onboarding and support checklist for each new or changed partner, including version/profile, endpoint, identifiers, control numbers, acknowledgment deadlines, owner, and escalation route.",
-    why: "A file reaching a mailbox is only one milestone. Syntax acceptance, application processing, and the real-world business outcome may happen later or fail independently.",
+      "Use a setup and support checklist for each new or changed partner. Include the version and guide, endpoint, IDs, control numbers, reply deadlines, owner, and escalation contact.",
+    why: "A file arriving is only one step. It may still fail a syntax check, application processing, or the real business task.",
     example:
-      "For an invoice missing its expected business response, correlate the outbound control number, transport receipt, syntax ack, partner receipt, AP status, and payment/remittance records before deciding whether to resend.",
+      "For an invoice with no expected business reply, check the outbound control number, transport receipt, syntax reply, partner receipt, accounts-payable status, and payment records before resending it.",
     operatorNote:
-      "Classify failures as transport, syntax/schema, partner-profile, mapping, business-rule, or downstream-application errors. On timeout, reconcile recipient/control/message IDs and business state before replay; preserve raw input, checksum, timestamps, and every ack/retry decision.",
+      "Classify the fault as transport, syntax, partner rules, mapping, business rules, or application processing. Before replaying after a timeout, check the recipient, IDs, and business result. Keep the original file, hash, times, and each reply or retry decision.",
     sources: [
       {
         label: "Azure Logic Apps B2B integration accounts",

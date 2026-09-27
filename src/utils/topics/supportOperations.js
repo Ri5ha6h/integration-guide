@@ -6,48 +6,46 @@ const incidentDocs =
 
 export const supportOperationsTopics = [
   topic("ServiceNow", {
-    summary: "An IT service-management platform for recording and coordinating operational work.",
+    summary: "A platform for recording and coordinating IT support work.",
     definition:
-      "ServiceNow is a configurable enterprise platform with ITSM workflows such as incidents, service requests, problems, changes, knowledge, and service-level tracking. Its record types, fields, routing, and automation depend on the organization's configuration and release.",
-    purpose:
-      "Provide a shared system of record for support work, ownership, status, communication, and operational evidence.",
+      "ServiceNow is a configurable business platform. Its IT support features include incidents, service requests, problems, changes, knowledge, and service targets. Each organization can set up its own records, fields, routing, and automation.",
+    purpose: "Keep support work, owners, status, communication, and evidence in one shared place.",
     usedWhen:
-      "Use it to log interruptions, fulfill catalog requests, coordinate escalations, link changes and affected services, and report service performance.",
-    why: "A common ticket lifecycle makes handoffs and accountability visible, but a ticket alone is not a substitute for telemetry, a runbook, or a verified technical fix.",
+      "Use it to record service interruptions, fulfill standard requests, manage escalations, link changes to affected services, and report service results.",
+    why: "A shared ticket shows who owns the work and what has happened. It does not replace monitoring data, a runbook, or a checked technical fix.",
     example:
-      "A Service Bus backlog alert opens or enriches an incident with the namespace, entity, oldest message age, affected integration, and runbook link.",
+      "A Service Bus backlog alert creates or updates an incident with the namespace, queue, oldest message age, affected integration, and runbook link.",
     operatorNote:
-      "Keep assignment group, affected service/CI, priority, customer impact, timestamps, communications, and resolution evidence current. Follow local workflows; organizations may configure these records differently.",
+      "Keep the owner group, affected service or configuration item, priority, customer impact, times, updates, and evidence current. Follow the local workflow because each organization can set up ServiceNow differently.",
     sources: [{ label: "ServiceNow Incident Management", url: incidentDocs }],
   }),
   topic("Incident Management", {
-    summary: "Coordinated work to restore a service after an unplanned interruption.",
+    summary: "The work to restore a service after an unplanned interruption.",
     definition:
-      "Incident Management records, prioritizes, investigates, communicates, and resolves unplanned service disruption. Its aim is timely restoration and impact reduction; root-cause analysis may continue separately through Problem Management.",
-    purpose: "Restore normal service safely while keeping affected users and responders informed.",
+      "Incident Management records, prioritizes, investigates, and resolves an unplanned service interruption. Its first goal is to restore service and reduce impact. A separate problem review can continue to find the root cause.",
+    purpose: "Restore service safely and keep users and responders informed.",
     usedWhen:
-      "Use it for an outage, degradation, repeated integration failure, queue backlog affecting commitments, or security/availability event that needs coordinated response.",
-    why: "A common incident record establishes impact, owner, priority, timeline, related alerts, and the current recovery action.",
+      "Use it for an outage, slow service, repeated integration failure, harmful queue delay, or security or availability event that needs a coordinated response.",
+    why: "One incident record shows the impact, owner, priority, timeline, related alerts, and current recovery work.",
     example:
-      "Create an incident when an APIM dependency failure causes all order submissions to fail, link the alert and deployment change, assign the integration group, and track restoration updates.",
+      "When an APIM dependency failure blocks all order submissions, create an incident, link the alert and recent change, assign the integration team, and record recovery updates.",
     operatorNote:
-      "Confirm user/business impact, start time, scope, workaround, and severity; update the record as evidence changes. Restoration can be complete before the longer-term defect is fully understood.",
+      "Record user impact, start time, scope, workaround, and priority. Update them when facts change. Service can be restored before the team finds the full cause.",
     sources: [{ label: "ServiceNow Incident Management", url: incidentDocs }],
   }),
   topic("Service Request handling", {
-    summary:
-      "A defined process for fulfilling a standard request rather than restoring a broken service.",
+    summary: "A process for completing a planned, standard request.",
     definition:
-      "A service request asks for a standard service, information, or access through an approved fulfillment path. It differs from an incident, which reports an unplanned interruption or degradation.",
+      "A service request asks for an approved service, information, or access. An incident reports an unplanned interruption or drop in service.",
     purpose:
-      "Fulfill routine user or partner needs consistently with the right approvals, identity checks, and completion evidence.",
+      "Handle routine user and partner needs with the right approvals, identity checks, and completion record.",
     usedWhen:
-      "Use it for planned access, onboarding, dashboard permissions, queue-read access, or certificate renewal requests that follow a known catalog workflow.",
-    why: "A request catalog makes routine work predictable and prevents standard provisioning from being mixed into outage response queues.",
+      "Use it for planned access, onboarding, dashboard access, permission to read a queue, or certificate renewal through an approved process.",
+    why: "A request process makes routine work predictable and keeps it separate from work to restore an outage.",
     example:
-      "A partner asks for a new APIM subscription; the request collects the API product, named technical owner, business approval, and intended expiry before provisioning.",
+      "A partner requests an APIM subscription. The request records the API product, technical owner, business approval, and intended expiry before access is set up.",
     operatorNote:
-      "Validate the requester, required approvals, scope, security controls, and completion criteria. If the request reveals an active service failure, link or create an incident rather than treating it as routine fulfillment.",
+      "Check who made the request, required approvals, scope, security rules, and completion steps. If the request reports a current service failure, link or create an incident.",
     sources: [
       {
         label: "ServiceNow IT Service Management",
@@ -56,18 +54,18 @@ export const supportOperationsTopics = [
     ],
   }),
   topic("P1 / P2 / P3 / P4 classification", {
-    summary: "A locally defined priority scale based on business impact and urgency.",
+    summary: "Priority levels based on business impact and urgency.",
     definition:
-      "Priority levels order incident response according to an organization's impact/urgency matrix and service commitments. P1 through P4 labels and exact thresholds are not universal; teams must use their approved definitions.",
+      "Priority levels use an organization's impact and urgency rules to order incident work. P1 to P4 labels and exact limits differ between organizations. Use the approved local definitions.",
     purpose:
-      "Allocate response effort consistently and trigger the right notification, escalation, and communication cadence.",
+      "Set response effort, notifications, escalation, and update frequency in a consistent way.",
     usedWhen:
-      "Use the agreed priority matrix when opening or updating an incident; reassess priority when affected users, service scope, or workaround changes.",
-    why: "A shared impact model helps coordinate responders, but numeric priority should reflect business service impact rather than one alert's technical magnitude.",
+      "Use the agreed priority rules when creating or updating an incident. Review the priority if impact, scope, or workaround changes.",
+    why: "Shared impact rules help teams coordinate. Choose priority based on the effect on the business, not only on a technical alert.",
     example:
-      "A full production outage that blocks all partner orders may meet local P1 criteria; one delayed report with a working manual alternative may fit a lower priority if the matrix says so.",
+      "A full outage that blocks all partner orders may meet the local P1 definition. A delayed report with a working manual option may have lower priority if local rules say so.",
     operatorNote:
-      "Record impact, urgency, affected business process, number of partners/users, and workaround. Never assume P1/P2 definitions or response targets from another company.",
+      "Record the impact, urgency, affected business process, number of affected users or partners, and workaround. Use local definitions for P1 to P4 and response targets.",
     sources: [
       {
         label: "ServiceNow Incident Management overview",
@@ -75,35 +73,34 @@ export const supportOperationsTopics = [
       },
     ],
   }),
-  topic("SLA tracking", {
-    summary: "Measuring support commitments such as response and restoration targets.",
+  topic("Service-level agreement (SLA) tracking", {
+    summary: "Tracking response, restoration, and request targets in a service agreement.",
     definition:
-      "An SLA defines service targets and how elapsed time is measured. A ticketing workflow may start, pause, resume, or stop a clock based on priority, business schedule, state, and agreement-specific rules.",
+      "A service-level agreement (SLA) sets service targets and how to measure elapsed time. A ticket may start, pause, resume, or stop its SLA clock based on priority, work hours, status, and agreement rules.",
     purpose:
-      "Show whether support obligations are being met and provide timely escalation before a target is missed.",
+      "Show whether support targets are being met and warn the team before a target is missed.",
     usedWhen:
-      "Use it for incident response/resolution targets and request fulfillment commitments defined in a service agreement.",
-    why: "Visible timers help teams prioritize work and report performance, provided the clock semantics and exclusions are configured and understood.",
+      "Use it for agreed incident response and repair times, or service request completion targets.",
+    why: "Visible timers help teams act in time when they know how the clock and exceptions work.",
     example:
-      "A P2 incident has a four-business-hour response target; the timer follows the service calendar, while the assigned group records the first meaningful response.",
+      "A P2 incident has a four-business-hour response target. The timer uses the service calendar, and the assigned team records its first useful response.",
     operatorNote:
-      "Check which SLA definition attached, start/pause/stop conditions, priority changes, business calendar/time zone, and breach warnings. A clock state may be incorrect if the record classification or fields are wrong.",
+      "Check which SLA applies, clock start and stop rules, priority changes, work calendar and time zone, and breach warnings. A wrong ticket type or field can make the clock wrong.",
     sources: [{ label: "ServiceNow Incident Management reporting", url: incidentDocs }],
   }),
   topic("Major Incident Management", {
-    summary:
-      "An accelerated, coordinated process for disruptions with exceptional business impact.",
+    summary: "A faster, coordinated response to a disruption with major business impact.",
     definition:
-      "Major Incident Management applies agreed triggers, roles, communication, and governance when a disruption exceeds routine incident handling. A major incident can be a promoted incident or a related parent record depending on local configuration.",
+      "Major Incident Management uses agreed triggers, roles, updates, and decisions for a disruption that is too large for routine incident handling. The organization may promote an incident or create a related parent record.",
     purpose:
-      "Mobilize responders and decision-makers quickly while maintaining a clear source of truth for status and restoration actions.",
+      "Bring responders and decision-makers together quickly and keep one clear record of status and recovery work.",
     usedWhen:
-      "Use it for severe or widespread loss of a critical service, multiple impacted business groups, or another impact threshold defined by the organization.",
-    why: "Named leadership, technical workstreams, and regular communication reduce duplicate investigation and conflicting user updates during high-pressure recovery.",
+      "Use it for severe or widespread loss of an important service or when the organization's impact rules require it.",
+    why: "Clear leads, technical work groups, and regular updates reduce repeated investigation and conflicting messages.",
     example:
-      "A region-wide integration outage is promoted to a major incident; an incident manager coordinates the bridge and status updates while network, identity, and integration teams investigate in parallel.",
+      "A region-wide integration outage is declared a major incident. The incident lead coordinates updates while network, identity, and integration teams investigate.",
     operatorNote:
-      "Declare using local criteria; name the incident lead and technical leads, maintain a timestamped decision log, communicate impact/workaround/next update, and link child incidents and changes.",
+      "Use local rules to declare a major incident. Name the incident and technical leads, log decisions with times, share impact and next update time, and link related incidents and changes.",
     sources: [
       {
         label: "Managing major incidents",
@@ -112,18 +109,17 @@ export const supportOperationsTopics = [
     ],
   }),
   topic("Monitoring and alert triage", {
-    summary: "Validate an alert, establish impact, and route the evidence to the right owner.",
+    summary: "Check an alert, find who and what it affects, and send it to the right owner.",
     definition:
-      "Alert triage confirms whether a signal represents a current actionable condition, identifies its affected service and scope, correlates nearby events, and chooses a response path.",
-    purpose:
-      "Turn machine-generated signals into an accurate incident or an informed no-action decision.",
+      "Alert triage checks whether an alert describes a current problem, finds the affected service and scope, compares related events, and chooses the next action.",
+    purpose: "Turn a system alert into a useful incident or a clear reason to take no action.",
     usedWhen:
-      "Use it for service health, certificate, network, application, queue, and business-flow alerts.",
-    why: "Alert volume is not the same as incident count; checking symptoms and related telemetry reduces duplicate tickets and missed customer impact.",
+      "Use it for service health, certificate, network, app, queue, and business-flow alerts.",
+    why: "Many alerts can describe one incident. Checking related evidence helps prevent duplicate tickets and missed impact.",
     example:
-      "A dead-letter count alert is checked against recent deployments, failed partner IDs, queue age, consumer logs, and the configured threshold before creating one incident for the common cause.",
+      "Before creating an incident for a dead-letter alert, check recent changes, affected partners, queue age, worker logs, and the alert limit to see if one cause explains the messages.",
     operatorNote:
-      "Confirm alert scope, time window, state, current metric/query result, recent changes, related alerts, customer impact, and the runbook's first safe checks. Preserve the alert ID and timestamps.",
+      "Check the alert scope, time range, state, current measure or query, recent changes, related alerts, customer impact, and first safe checks in the runbook. Keep the alert ID and times.",
     sources: [
       {
         label: "Azure Monitor alerts overview",
@@ -131,52 +127,47 @@ export const supportOperationsTopics = [
       },
     ],
   }),
-  topic("L1 / L2 troubleshooting", {
-    summary:
-      "Structured first- and second-line diagnosis using service context and approved runbooks.",
+  topic("Level 1 and 2 troubleshooting", {
+    summary: "First- and second-level checks using service details and approved guides.",
     definition:
-      "L1 commonly validates the alert/ticket, user impact, basic health, and known workarounds. L2 investigates service-specific configuration, logs, queue/message state, and dependency paths within its access and runbook scope; exact responsibilities vary by organization.",
+      "Level 1 (L1) checks the alert or ticket, user impact, basic service health, and known workarounds. Level 2 (L2) checks service settings, logs, queue or message state, and connected services within its access and guide.",
     purpose:
-      "Resolve known operational faults quickly and gather the evidence needed for specialist escalation when the issue exceeds the support boundary.",
+      "Fix known faults quickly and collect useful evidence when a specialist must take over.",
     usedWhen:
-      "Use it for initial incident response, common authentication/network/configuration checks, and standard single-message recovery tasks.",
-    why: "A repeatable diagnostic order prevents guesswork and makes escalation actionable without granting every responder broad production access.",
+      "Use it for the first incident checks, common sign-in or network problems, settings checks, and approved single-message recovery.",
+    why: "A repeatable check order reduces guesswork and gives specialists useful evidence without giving every responder broad production access.",
     example:
-      "L1 confirms partner scope and current impact; L2 checks the Logic App run ID, connector status, queue delivery count, and the relevant correlation ID using the approved read-only tools.",
+      "L1 confirms which partner and service are affected. L2 checks the Logic App run ID, connector status, queue delivery count, and correlation ID with approved read-only tools.",
     operatorNote:
-      "Stay within authorized access, preserve timestamps and IDs, follow change controls, and avoid deleting or replaying messages during diagnosis unless the runbook explicitly authorizes it.",
+      "Use only approved access. Keep times and IDs, follow change rules, and do not delete or replay messages during diagnosis unless the runbook allows it.",
     sources: [{ label: "ServiceNow Incident Management", url: incidentDocs }],
   }),
-  topic("L3 escalation", {
-    summary:
-      "A handoff to engineering or a specialist for code, platform, or design-level diagnosis.",
+  topic("Level 3 escalation", {
+    summary: "Send a complex or repeated fault to engineering or a specialist.",
     definition:
-      "L3 escalation routes a complex or recurring failure to the team that can inspect application code, service configuration, vendor behavior, or architectural assumptions. It should preserve current ownership and incident communications while technical work moves deeper.",
-    purpose:
-      "Get specialist access to faults that cannot be resolved by routine support checks or documented recovery steps.",
+      "Level 3 (L3) escalation asks a team with deeper access to inspect code, service settings, vendor behavior, or design choices. The support team must keep incident ownership and updates clear during the handoff.",
+    purpose: "Get help for faults that routine checks and recovery guides cannot fix.",
     usedWhen:
-      "Use it for reproducible product defects, unexplained data corruption, systemic performance problems, code changes, or a repeated failure after a verified workaround.",
-    why: "A concise evidence package lets engineers begin from the failure point instead of repeating basic triage.",
+      "Use it for repeatable software faults, unexplained data changes, broad performance problems, code changes, or failures that return after a verified workaround.",
+    why: "A clear evidence package lets engineers start at the failure instead of repeating first checks.",
     example:
-      "Escalate with a failing Logic App run URL, redacted action inputs, UTC timestamps, correlation/message IDs, expected versus actual behavior, recent deployment, and the impact/workaround.",
+      "Send the failing Logic App run link, cleaned action inputs, UTC times, correlation and message IDs, expected and actual results, recent changes, and impact or workaround.",
     operatorNote:
-      "State the question or decision needed, attach sanitized evidence and reproduction steps, identify a technical owner, and keep the incident/customer update cadence active until restoration.",
+      "State the question or decision needed. Share safe evidence and steps to repeat the fault, name a technical owner, and keep incident updates going until service is restored.",
     sources: [{ label: "ServiceNow Incident Management", url: incidentDocs }],
   }),
   topic("Standard message reprocessing", {
-    summary:
-      "A reviewed replay of one failed message after its cause and side effects are understood.",
+    summary: "Review and resend one failed message after checking the cause and business result.",
     definition:
-      "Standard reprocessing selects a specific failed item, corrects or resolves its cause, validates its business state, and resubmits it through an approved route while retaining original identity and audit details.",
-    purpose:
-      "Recover an individual transaction without altering unrelated messages or losing its operational history.",
+      "Standard reprocessing selects one failed message, fixes its cause, checks its business status, and sends it again through an approved path. It keeps the original ID and audit record.",
+    purpose: "Recover one transaction without changing other messages or losing its history.",
     usedWhen:
-      "Use it when one message failed for a known and resolved reason, such as a corrected mapping or partner configuration.",
-    why: "A single-message procedure limits blast radius and provides a concrete result that can be reconciled with the source and destination systems.",
+      "Use it when one message failed for a known cause that is now fixed, such as a corrected map or partner setting.",
+    why: "Handling one message at a time limits the effect of a mistake and makes the result easier to compare with the source and destination.",
     example:
-      "After correcting an item-code map, an authorized operator peeks the dead-lettered ASN, verifies the order is still open, then submits a replay record linked to the original message ID.",
+      "After fixing an item-code map, an approved operator inspects the dead-lettered shipment notice, checks that the order is still open, and sends a replay linked to the original message ID.",
     operatorNote:
-      "Use peek/inspect first; verify idempotency, route, content, authorization, and destination business status. Record the original ID, replay ID, operator, reason, and final outcome.",
+      "Inspect before receiving or resending. Check duplicate protection, route, content, permission, and destination status. Record the original and replay IDs, operator, reason, and result.",
     sources: [
       {
         label: "Service Bus dead-letter queues and reprocessing",
@@ -185,18 +176,18 @@ export const supportOperationsTopics = [
     ],
   }),
   topic("Bulk reprocessing concepts", {
-    summary: "A bounded, rate-controlled replay of a validated set of failed messages.",
+    summary: "Resend a checked group of failed messages at a controlled speed.",
     definition:
-      "Bulk reprocessing defines a selection predicate, preview and approval, replay order/rate, outcome ledger, stop conditions, and reconciliation for a group of messages sharing a known cause.",
+      "Bulk reprocessing sets which messages to select, previews and approves the set, controls send order and speed, records each result, and defines when to stop and reconcile.",
     purpose:
-      "Recover a broad backlog consistently after a common defect is fixed without overloading downstream systems.",
+      "Recover many messages after fixing a shared fault without overloading the systems that receive them.",
     usedWhen:
-      "Use it only when the affected population can be identified precisely and replay safety has been confirmed for every message class.",
-    why: "Batch controls reduce repetitive work while preserving an auditable cutoff and allowing responders to stop before a new failure spreads.",
+      "Use it only when the affected messages can be selected precisely and replay is safe for every message type.",
+    why: "Batch limits reduce repeated work and give the team a clear point to stop before a new fault spreads.",
     example:
-      "Preview all `SchemaVersion=3` documents dead-lettered during a 20-minute bad deployment, replay 100 at a time, and pause automatically if the failure rate exceeds a set limit.",
+      "Preview all version 3 documents moved to the dead-letter queue during a 20-minute bad deployment. Resend 100 at a time and pause if failures exceed the agreed limit.",
     operatorNote:
-      "Export the selected IDs first, exclude messages already completed downstream, rate-limit, monitor destination latency/backlog, stop on regression, and reconcile attempted/succeeded/failed counts afterward.",
+      "Save the selected IDs first. Exclude work already completed at the destination, limit send speed, watch destination delays and queue size, stop on new failures, then compare attempted, successful, and failed counts.",
     sources: [
       {
         label: "Azure Well-Architected transient fault guidance",
@@ -205,18 +196,18 @@ export const supportOperationsTopics = [
     ],
   }),
   topic("Queue administration", {
-    summary: "Maintaining queue health, access, configuration, and safe recovery paths.",
+    summary: "Keep queues healthy, access-controlled, and safe to recover.",
     definition:
-      "Queue administration covers entity lifecycle and settings, role/access assignments, throughput and backlog monitoring, dead-letter inspection, retention, and operational change control.",
+      "Queue administration covers queue settings and lifetime, access, processing speed, backlog checks, dead-letter review, retention, and change records.",
     purpose:
-      "Keep brokered work moving while protecting message integrity and limiting administrative actions to approved owners.",
+      "Keep messages moving while protecting their contents and limiting admin changes to approved owners.",
     usedWhen:
-      "Use it during onboarding, consumer outages, backlog response, planned maintenance, permission review, and DLQ cleanup/replay.",
-    why: "A documented queue owner and safe operating model reduce ad hoc destructive changes and make capacity or consumer problems visible earlier.",
+      "Use it during setup, worker outages, backlog response, planned work, permission reviews, and dead-letter cleanup or replay.",
+    why: "A named queue owner and safe process reduce risky changes and help find capacity or worker problems earlier.",
     example:
-      "Before raising worker concurrency, an operator verifies downstream SQL capacity, queue age, max concurrent calls, and the planned change's rollback threshold.",
+      "Before increasing worker count, check the SQL service capacity, queue age, worker limit, and how to reverse the change.",
     operatorNote:
-      "Prefer peek and inspect before receive or purge. Check active/dead-letter/scheduled counts, oldest age, entity settings, access scope, consumer ownership, and change record before mutation.",
+      "Inspect messages before receiving or deleting them. Check active, dead-letter, and scheduled counts; oldest age; settings; access; owner; and change record before making a change.",
     sources: [
       {
         label: "Service Bus queues, topics, and subscriptions",
@@ -225,18 +216,17 @@ export const supportOperationsTopics = [
     ],
   }),
   topic("Monitoring administration", {
-    summary: "Keeping telemetry sources, dashboards, alert rules, and routes useful.",
+    summary: "Keep monitoring, dashboards, alerts, and notification routes useful.",
     definition:
-      "Monitoring administration manages diagnostic settings, instrumentation, workspaces, table retention, dashboards, alert conditions, action groups, ownership, and noise review.",
-    purpose:
-      "Ensure the right operational signals reach the right responders with enough context to take a defined action.",
+      "Monitoring administration manages data collection, workspaces, data retention, dashboards, alert rules, notification groups, owners, and alert noise.",
+    purpose: "Send the right service signals to the right people with enough detail to act.",
     usedWhen:
-      "Use it when onboarding a service, changing support ownership, tuning a threshold, adding a new integration, or reviewing missed/noisy alerts.",
-    why: "A well-designed alert is connected to a symptom, owner, and runbook; unowned alerts and missing telemetry both undermine incident response.",
+      "Use it when adding a service, changing support owners, tuning an alert, adding an integration, or reviewing missed or noisy alerts.",
+    why: "An alert works best when it has a clear symptom, owner, and response guide. Missing data or ownerless alerts make incident response harder.",
     example:
-      "A service deployment adds diagnostic settings for dependency failures and tests that its queue-age alert reaches the integration on-call action group with the correct resource link.",
+      "A service change enables logging for dependency failures and checks that a queue-age alert reaches the integration on-call team with the correct resource link.",
     operatorNote:
-      "Version alert changes, check signal and evaluation window, test notification delivery, document the owner and runbook, review duplicates/noise, and track telemetry ingestion/retention cost.",
+      "Track alert changes, check signal and time window, test notifications, record owner and response guide, review duplicate alerts, and watch data volume and retention cost.",
     sources: [
       {
         label: "Azure Monitor alerts overview",
@@ -249,18 +239,18 @@ export const supportOperationsTopics = [
     ],
   }),
   topic("Certificate monitoring", {
-    summary: "Proactive checks that certificate trust and renewal are healthy at live endpoints.",
+    summary: "Check certificates and renewals at the live services that use them.",
     definition:
-      "Certificate monitoring records certificate owners and expiry dates, watches endpoints and stores for expiry or chain errors, and verifies that a renewal has actually reached each service and partner route.",
+      "Certificate monitoring records each certificate's owner and expiry, checks services and stores for expiry or trust errors, and confirms that a renewed certificate reached each service and partner.",
     purpose:
-      "Give owners time to renew and deploy certificates before TLS, mutual TLS, or signed-message exchanges fail.",
+      "Give owners time to renew and install certificates before secure connections or signed exchanges fail.",
     usedWhen:
-      "Use it for public and private HTTPS endpoints, APIM/Front Door origins, AS2 partner certificates, client identities, and internal trust stores.",
-    why: "Inventory expiry alone misses stale deployments, wrong SANs, missing intermediates, and partner trust-store lag; an endpoint probe checks the certificate clients really see.",
+      "Use it for public and private HTTPS, APIM and Front Door backends, AS2 partner certificates, client identities, and internal trust stores.",
+    why: "An expiry list can miss an old certificate still used by a gateway, a wrong server name, a missing link in the trust chain, or a partner that has not updated. Check the certificate clients see.",
     example:
-      "A daily probe checks the public API certificate chain and expiry while a separate owner alert tracks the partner's AS2 signing certificate and agreed rollover date.",
+      "A daily check watches the public API certificate and chain. A separate alert tracks the partner's AS2 signing certificate and agreed change date.",
     operatorNote:
-      "Alert at several lead times, include endpoint, certificate serial/thumbprint, owner, and renewal ticket, and verify both sides of a partner exchange after rotation. Keep private keys out of logs and tickets.",
+      "Send alerts well before expiry. Include endpoint, certificate ID, owner, and renewal ticket. Check both sides after rotation. Keep private keys out of logs and tickets.",
     sources: [
       {
         label: "Azure Key Vault certificate overview",
