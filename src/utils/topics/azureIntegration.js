@@ -4,18 +4,18 @@ const topic = (title, details) => createTopic("platform", title, details);
 
 export const azureIntegrationTopics = [
   topic("Azure Logic Apps", {
-    summary: "A managed workflow service for connecting systems and coordinating steps.",
+    summary: "A workflow service that connects systems and runs business steps.",
     definition:
-      "A Logic App runs a workflow made of a trigger and one or more actions. Managed and built-in connectors let the workflow call services, move data, and respond to events; Consumption and Standard use different hosting and billing models.",
+      "A Logic App runs a workflow. A trigger starts it; actions then call services, move data, or respond to events. Consumption and Standard are two hosting and billing options.",
     purpose:
-      "Make integration flow visible and operable: receive work, validate or transform it, call downstream systems, and handle branches, waits, and failures.",
+      "Use a visible workflow to receive work, check or change data, call other systems, and handle branches, waits, and errors.",
     usedWhen:
-      "Use it for connector-heavy workflows, scheduled synchronization, approval flows, and B2B orchestration. Choose the hosting model after checking networking, isolation, runtime features, and cost requirements.",
-    why: "The run history records trigger and action outcomes, which helps an operator locate the failing step. Connectors reduce bespoke protocol code, though they do not remove the need to understand connector limits and retry behavior.",
+      "Choose Logic Apps for workflows that use connectors, run on a schedule, need approvals, or coordinate business-to-business exchanges. Choose a hosting option after you check network, isolation, features, and cost.",
+    why: "Run history shows which trigger and action ran or failed. Connectors reduce custom connection code, but each connector has limits and retry rules.",
     example:
-      "A new order arrives over HTTPS, the workflow validates its partner and required fields, writes the original document to Blob Storage, then sends a normalized order to a Service Bus queue.",
+      "A workflow receives an order over HTTPS, checks the partner and required fields, saves the original document in Blob Storage, then sends a standard order to a Service Bus queue.",
     operatorNote:
-      "Check whether the trigger fired, the exact failed action, connector authentication, throttling, and retry history. Before resubmitting a run, confirm whether earlier actions already made external changes.",
+      "Check whether the trigger ran, which action failed, connector sign-in, throttling, and retry history. Before you submit the run again, check whether an earlier step already changed another system.",
     sources: [
       {
         label: "What is Azure Logic Apps?",
@@ -24,18 +24,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure Functions / Function Apps", {
-    summary: "Event-driven code for integration steps that need custom logic.",
+    summary: "Code that runs when an event or schedule starts it.",
     definition:
-      "Azure Functions runs code in response to a trigger such as HTTP, a timer, or a brokered message. A Function App is the hosting and configuration boundary for one or more functions, which share settings, deployment, and a hosting plan.",
+      "Azure Functions runs code after a trigger, such as an HTTP request, timer, or message. A Function App hosts one or more functions and holds their settings and hosting plan.",
     purpose:
-      "Add a small, independently deployable code step for validation, enrichment, protocol adaptation, or computation that is awkward to express as workflow actions.",
+      "Add one small code step for a check, data enrichment, protocol conversion, or calculation that is hard to build with workflow actions.",
     usedWhen:
-      "Use it for event handlers, queue consumers, scheduled jobs, and API endpoints where managed event-based scaling fits. Use an API or longer-running compute service when the request needs a consistently low-latency response or substantial long-lived processing.",
-    why: "The function keeps custom code close to the event source and can scale independently from its producer. That boundary is useful only when timeouts, concurrency, and downstream capacity are designed together.",
+      "Use Functions for event handlers, queue workers, scheduled jobs, or APIs that can use event-based scaling. For steady low response times or long-running work, choose a service built for those needs.",
+    why: "A function runs near the event and can scale apart from the sender. Set timeouts and parallel work to match the capacity of the services it calls.",
     example:
-      "A queue-triggered function validates an incoming shipment message, adds a canonical correlation ID, stores a processing record, then completes or dead-letters the delivery according to the result.",
+      "A queue-triggered function checks a shipment message, adds a correlation ID, saves a processing record, then completes or dead-letters the message based on the result.",
     operatorNote:
-      "Inspect invocation failures alongside host health, trigger configuration, app settings, scale/concurrency, and dependency errors. Check whether a timed-out invocation may have completed its side effect before it retried.",
+      "Check failed runs, host health, trigger settings, app settings, scale and concurrency, and dependency errors. A timed-out run may have changed another system before it retried.",
     sources: [
       {
         label: "Azure Functions overview",
@@ -44,18 +44,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure Service Bus", {
-    summary: "A durable enterprise broker that separates message producers from consumers.",
+    summary: "A message broker that holds work until receivers can process it.",
     definition:
-      "Azure Service Bus provides managed queues and topics for asynchronous business messaging. It supports brokered delivery controls such as peek-lock, scheduled delivery, sessions, duplicate detection, and dead-letter subqueues, subject to entity and tier capabilities.",
+      "Azure Service Bus provides managed queues and topics for business messages. Features include peek-lock, scheduled delivery, sessions, duplicate detection, and dead-letter queues. Available features depend on the entity and service tier.",
     purpose:
-      "Accept work durably, absorb bursts, and let receivers process at a pace the downstream system can sustain.",
+      "Store work safely, absorb bursts, and let receivers process it at a pace the next system can handle.",
     usedWhen:
-      "Use it for commands, work items, and business messages that need durable handoff, retry, and controlled settlement. Choose a queue for competing workers or a topic when independent subscribers need their own copy.",
-    why: "A broker reduces time coupling: the sender can finish after the broker accepts a message instead of waiting for every downstream dependency. Delivery is commonly at least once, so consumers must tolerate duplicates.",
+      "Use it for commands, work items, and business messages that need a reliable handoff, retries, or controlled completion. Choose a queue for competing workers, or a topic when separate subscribers each need a copy.",
+    why: "The sender can finish after Service Bus accepts a message instead of waiting for every receiving system. Messages can be delivered more than once, so receivers must handle duplicates.",
     example:
-      "An order API sends `OrderAccepted` with a stable `MessageId`; billing and fulfillment each receive their own subscription copy and process independently.",
+      "An order API sends an OrderAccepted message with a stable message ID. Billing and fulfillment each receive their own subscription copy and process it independently.",
     operatorNote:
-      "Watch active and dead-letter counts, oldest-message age, incoming versus completed rate, throttling, and consumer exceptions. A rising backlog can mean insufficient capacity or a stalled dependency, not simply a broker issue.",
+      "Watch active and dead-letter counts, oldest-message age, incoming and completed rates, throttling, and consumer errors. A growing backlog can mean workers lack capacity or a dependency has stopped responding.",
     sources: [
       {
         label: "Service Bus queues, topics, and subscriptions",
@@ -64,18 +64,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure API Management (APIM)", {
-    summary: "A governed gateway and lifecycle platform for publishing APIs.",
+    summary: "A gateway for publishing, protecting, and managing APIs.",
     definition:
-      "API Management combines a request gateway with a management plane and developer portal. The gateway routes calls to backends and can enforce authentication, quotas, rate limits, transformations, and observability through policies.",
+      "API Management includes a gateway, a management service, and a developer portal. The gateway sends calls to backend services and can apply sign-in checks, quotas, rate limits, data changes, and monitoring rules called policies.",
     purpose:
-      "Give consumers a stable, governed API surface while backend services evolve behind it.",
+      "Give API users one stable, controlled way to reach services while the services behind it can change.",
     usedWhen:
-      "Use it when APIs need consistent access control, versioning, partner products, request shaping, or usage visibility across one or more backends.",
-    why: "Shared policies put cross-cutting controls in one place and the facade prevents consumers from depending directly on every backend address and implementation.",
+      "Use it when APIs need shared access rules, versions, partner plans, request changes, or usage reports across one or more backend services.",
+    why: "Shared policies keep common controls in one place. The gateway also means API users do not need to depend on each backend address or design.",
     example:
-      "A partner presents an Entra-issued token to `/orders`; APIM checks the JWT, limits requests for the partner product, routes to the current order service, and records the request ID.",
+      "A partner sends an Entra access token to the orders API. APIM checks the token, limits the partner's requests, sends the call to the current order service, and records a request ID.",
     operatorNote:
-      "Separate gateway rejection from backend failure. Trace the API operation, policy result, request ID, backend URL/status, and timeout before changing a policy or retrying a request.",
+      "Find out whether APIM or the backend rejected the call. Check the API operation, policy result, request ID, backend address and status, and timeout before changing a policy or retrying.",
     sources: [
       {
         label: "API Management key concepts",
@@ -84,18 +84,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure Front Door Premium", {
-    summary: "A global HTTP(S) edge for routing users to healthy application origins.",
+    summary: "A global service that sends web requests to healthy application servers.",
     definition:
-      "Front Door is a global layer-7 application delivery service. A profile contains endpoints and routes; origin groups define backends and health probes. Premium adds capabilities such as Private Link connectivity to supported origins and managed WAF rule sets.",
+      "Front Door routes web traffic around the world. Routes match a host name and path; origin groups list backend services and health checks. Premium can connect to supported backends through Private Link and use managed WAF rules.",
     purpose:
-      "Resolve the public application entry point, route requests by host/path, and keep traffic on healthy origins while applying edge controls.",
+      "Provide one public address for an application, choose a healthy backend, and apply controls near the user.",
     usedWhen:
-      "Use it for internet-facing web apps and APIs serving multiple geographies or requiring edge routing, TLS termination, health-based failover, caching, or private origin access.",
-    why: "Clients use one global entry point while origin selection and health decisions happen at the edge. Private origin connectivity can reduce direct public exposure, but the origin still needs to reject unintended traffic paths.",
+      "Use it for public websites and APIs that serve different regions or need edge routing, TLS, failover, caching, or private backend access.",
+    why: "Clients use one global address while Front Door checks backend health and chooses where to send each request. Private Link reduces public exposure, but the backend must still block unwanted paths.",
     example:
-      "`api.example.com/v1/*` routes to a primary regional APIM origin; a health probe marks it unhealthy and Front Door selects the configured secondary origin.",
+      "Requests for api.example.com/v1 go to the main regional APIM service. If its health check fails, Front Door sends requests to the configured backup.",
     operatorNote:
-      "Follow the whole chain: DNS, endpoint/domain, route match, origin group, probe path/status, WAF policy association, and origin Private Link approval. Test host headers and health paths from the configured probe context.",
+      "Check DNS, the endpoint and domain, route match, origin group, health-check path and result, WAF policy, and Private Link approval. Test the host name and health path from the health check location.",
     sources: [
       {
         label: "Azure Front Door documentation",
@@ -104,18 +104,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure Web Application Firewall (WAF)", {
-    summary: "Layer-7 rules that inspect web requests before they reach an application.",
+    summary: "Rules that check web requests before they reach an application.",
     definition:
-      "A WAF policy applies custom match or rate-limit rules and, where supported, managed rule sets to HTTP(S) traffic. With Front Door Premium, the policy can be associated with a profile, domain, or route.",
+      "A WAF policy uses custom rules and, where supported, managed rule sets to check web traffic. A rule can match request details or limit request rates. With Front Door Premium, attach the policy to a profile, domain, or route.",
     purpose:
-      "Detect or block request patterns associated with common web exploits, unwanted methods, IP ranges, or abusive request rates.",
+      "Find or block common web attacks, unwanted methods, selected IP addresses, or excessive request rates.",
     usedWhen:
-      "Use it for public web applications and APIs at Front Door or Application Gateway, with rules scoped to actual routes and application behavior.",
-    why: "The edge can reject unwanted requests before they consume backend resources. WAF is one layer of defense; application authorization and input validation still belong in the application.",
+      "Use it to protect public websites and APIs at Front Door or Application Gateway. Match rules to the routes and requests your application uses.",
+    why: "A WAF can block unwanted requests before they use backend resources. The application must still check user access and validate input.",
     example:
-      "Begin in Detection mode, review a managed-rule match against the API's JSON body, add a narrow exclusion only if the request is legitimate, then validate the change before Prevention mode.",
+      "Start in Detection mode. Review a managed-rule match against a valid API request, add a narrow exception if needed, and check the change before switching to Prevention mode.",
     operatorNote:
-      "For a blocked request, capture policy, rule ID, match variable/value, action, host/path, and request correlation data. Check false-positive scope before disabling a rule broadly.",
+      "For a blocked request, record the policy, rule ID, matched field and value, action, host, path, and request ID. Check the scope of a false positive before disabling a rule.",
     sources: [
       {
         label: "WAF on Azure Front Door",
@@ -124,18 +124,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure Integration Account", {
-    summary: "A managed collection of reusable artifacts for Logic Apps B2B workflows.",
+    summary: "A shared store for B2B partner details and EDI rules used by Logic Apps.",
     definition:
-      "An Integration Account stores enterprise integration artifacts such as partner identities, agreements, schemas, maps, and certificates. Logic Apps can use linked artifacts for X12, EDIFACT, AS2, and related B2B processing.",
+      "An Integration Account stores partner identities, agreements, schemas, maps, and certificates. Logic Apps can use these items to process X12, EDIFACT, AS2, and other B2B exchanges.",
     purpose:
-      "Keep partner contracts and shared B2B definitions separate from the workflow steps that process each message.",
+      "Keep shared partner rules and documents separate from the workflow steps that process each message.",
     usedWhen:
-      "Use it when exchanges need schema validation, EDI encoding/decoding, partner-specific agreements, or shared artifact management across workflows.",
-    why: "A centrally governed artifact set makes partner behavior easier to review and update than duplicating maps and identifiers inside each flow.",
+      "Use it when partner exchanges need schema checks, EDI conversion, partner agreements, or shared artifacts across workflows.",
+    why: "A shared set of partner rules is easier to review and update than copies of maps and IDs inside many workflows.",
     example:
-      "An AS2 agreement identifies sender and receiver, selects the X12 850 schema and acknowledgment rules, and routes the decoded purchase order to the relevant Logic App workflow.",
+      "An AS2 agreement names the sender and receiver, selects the X12 850 schema and acknowledgment rules, then sends the decoded purchase order to a Logic App.",
     operatorNote:
-      "Verify the workflow-to-account link, region/subscription compatibility, artifact version, sender/receiver identifiers, agreement direction, certificate validity, and control-number state.",
+      "Check the workflow link, region and subscription, artifact version, partner IDs, agreement direction, certificate expiry, and control-number state.",
     sources: [
       {
         label: "Create and manage integration accounts",
@@ -144,18 +144,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure Storage", {
-    summary: "Cloud object, file, queue, and table storage for integration workloads.",
+    summary: "Cloud storage for objects, shared files, simple tables, and basic queues.",
     definition:
-      "A storage account provides namespace and configuration for services such as Blob Storage, Azure Files, Queue Storage, and Table Storage. These services have different access patterns and semantics; Queue Storage is not the same broker as Service Bus.",
+      "A storage account provides Blob Storage, Azure Files, Queue Storage, and Table Storage. Each service works differently. Queue Storage is a basic storage queue, not the same message broker as Service Bus.",
     purpose:
-      "Persist payloads, files, checkpoints, logs, and lightweight coordination data independently of compute instances.",
+      "Keep documents, files, checkpoints, logs, and small coordination records outside a workflow or function.",
     usedWhen:
-      "Use blobs for documents and large objects, Files for shared file access, Tables for simple key/attribute data, and Queue Storage for basic storage-backed work queues where its feature set fits.",
-    why: "Storage provides durable data outside an individual workflow or function's lifecycle, making replay and audit possible when retention and access controls are designed intentionally.",
+      "Use Blob Storage for documents and large objects, Azure Files for shared files, Tables for simple key-value records, and Queue Storage for basic work queues when its features are enough.",
+    why: "Data remains available after a workflow or function stops. This supports replay and audit when access and retention rules are set.",
     example:
-      "Store the raw partner EDI file in a private blob container with a content hash and received timestamp; put only its blob URI and business key on the processing queue.",
+      "Save the original partner EDI file in a private blob with its hash and received time. Put only the blob address and business key on the processing queue.",
     operatorNote:
-      "Check the specific service endpoint, authorization mode, network rules/private endpoint DNS, redundancy, lifecycle/retention rules, and capacity/transaction metrics. Avoid exposing account keys in run history.",
+      "Check the service address, sign-in method, network rules and private DNS, data copies, retention rules, and capacity or transaction measures. Keep account keys out of run history.",
     sources: [
       {
         label: "Introduction to Azure Storage",
@@ -164,18 +164,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure SQL Managed Instance", {
-    summary: "A managed SQL Server database environment designed for migration compatibility.",
+    summary: "A managed SQL Server database service for workloads that need SQL Server features.",
     definition:
-      "SQL Managed Instance is a platform-as-a-service database engine that automates infrastructure tasks such as patching, backups, and much of high availability, while retaining broad SQL Server engine compatibility and instance-level features.",
+      "SQL Managed Instance is a managed database service. Microsoft handles tasks such as patching and backups, while the service keeps many SQL Server features used by existing applications.",
     purpose:
-      "Run relational workloads that need SQL Server behavior and managed operations without maintaining the database host and operating system yourself.",
+      "Run business databases without managing the database server and operating system yourself.",
     usedWhen:
-      "Use it for compatible line-of-business databases, migration targets, and transactional integration state. Confirm feature compatibility, network placement, sizing, and licensing/cost before selection.",
-    why: "It reduces infrastructure maintenance while preserving many SQL Server application assumptions. It is not identical to an on-premises server, and it is not a substitute for choosing a database by workload shape.",
+      "Use it for compatible business databases, migrations, and integration records. Check feature support, network location, size, and cost before you choose it.",
+    why: "It reduces server maintenance and keeps many SQL Server features. It still differs from a local SQL Server, so match the database to the workload.",
     example:
-      "An integration worker writes a unique external message key and processing status in a transaction, so a replay can detect that the same order was already committed.",
+      "An integration worker saves a message ID and its processing status in one transaction. On replay, it can check whether the order was already saved.",
     operatorNote:
-      "Check instance health, compute/storage pressure, connection limits, query waits, private DNS, firewall path, and whether the caller is reaching the expected database. Correlate SQL failures with the message attempt.",
+      "Check instance health, CPU and storage pressure, connection limits, query waits, private DNS, firewall route, and target database. Match SQL errors to the message attempt.",
     sources: [
       {
         label: "What is Azure SQL Managed Instance?",
@@ -184,19 +184,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Application Insights", {
-    summary:
-      "Application performance monitoring for requests, dependencies, exceptions, and traces.",
+    summary: "Monitoring for application requests, dependencies, errors, and traces.",
     definition:
-      "Application Insights is an application-monitoring feature of Azure Monitor. Instrumentation collects application telemetry and can connect related requests and dependencies into an end-to-end operation view.",
+      "Application Insights is part of Azure Monitor. It collects application monitoring data and can link related requests and service calls into one trace.",
     purpose:
-      "Show how an application behaved from a caller's request through internal work and outbound dependencies.",
+      "Show what happened from a user's request through the application and the services it called.",
     usedWhen:
-      "Use it for web APIs, Functions, and services where latency, failure rates, dependency calls, and distributed traces help diagnose production behavior.",
-    why: "A correlated trace can distinguish a slow app from a slow database, broker, or remote API and can make error patterns searchable over time.",
+      "Use it for web APIs, Functions, and services where response time, failures, service calls, and traces help explain production problems.",
+    why: "A linked trace can show whether a slow response came from the app, database, message broker, or another API. It also makes error patterns easier to search.",
     example:
-      "Search a failed order operation by its operation ID, then compare the incoming API request duration with its SQL and Service Bus dependency spans.",
+      "Find a failed order by its operation ID, then compare the API request time with its SQL and Service Bus calls.",
     operatorNote:
-      "Check instrumentation status, sampling, operation/correlation IDs, dependency telemetry, exception details, and ingestion delay. Confirm that sensitive payloads and headers are not being collected inadvertently.",
+      "Check that monitoring is enabled, how data is sampled, operation IDs, service-call data, errors, and how long records take to appear. Make sure logs do not collect private message data or headers.",
     sources: [
       {
         label: "Application Insights overview",
@@ -205,18 +204,17 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Log Analytics", {
-    summary: "A workspace-backed experience for collecting and querying Azure Monitor logs.",
+    summary: "A tool for searching and comparing Azure Monitor logs.",
     definition:
-      "Log Analytics is the Azure portal tool used to explore Azure Monitor Logs in a Log Analytics workspace. Tables contain records from configured Azure resources and agents; retention and ingestion depend on workspace/table settings.",
-    purpose:
-      "Bring operational records together so responders can filter, join, summarize, and investigate them with KQL.",
+      "Log Analytics is the Azure portal tool for querying Azure Monitor Logs in a workspace. Configured resources and agents send records to a workspace. Diagnostic settings control which records are sent; workspace and table settings control how long they are kept.",
+    purpose: "Search records from different services together to investigate an issue with KQL.",
     usedWhen:
-      "Use it for cross-resource investigation, long-term operational queries, dashboards, and log-based alert conditions.",
-    why: "A shared query environment makes it possible to compare events across services, provided the right diagnostics are enabled and records carry consistent identifiers.",
+      "Use it to investigate several resources, write repeatable queries, build dashboards, and create alerts from logs.",
+    why: "One query space lets responders compare events across services when logging is enabled and records share useful IDs.",
     example:
-      "Query API failures and broker dead-letter events over the same 30-minute interval, then join or group them by a propagated correlation ID.",
+      "Search API errors and broker dead-letter events from the same 30 minutes, then group them by correlation ID.",
     operatorNote:
-      "Check the workspace and table first, then confirm diagnostic settings, ingestion latency, table retention, access permissions, and query time range before concluding that no events exist.",
+      "Check the workspace and table, logging settings, time before records appear, retention, access, and time range before deciding that no records exist.",
     sources: [
       {
         label: "Azure Monitor log queries",
@@ -225,18 +223,18 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Kusto Query Language (KQL)", {
-    summary: "A pipe-based query language for filtering and analyzing telemetry tables.",
+    summary: "A query language for filtering and summarizing monitoring data.",
     definition:
-      "KQL expresses read-oriented data queries as a sequence of tabular operators. Azure Monitor Logs uses KQL, with table names and some supported behavior depending on the data source.",
+      "KQL queries use steps to read and analyze tables. Azure Monitor Logs uses KQL, but table names and fields depend on the data source.",
     purpose:
-      "Turn raw telemetry into a focused answer: identify failures, calculate rates, group by time or dimension, and inspect representative records.",
+      "Find errors, calculate rates, group events by time or type, and inspect example records.",
     usedWhen:
-      "Use it in Log Analytics and Application Insights investigations, dashboards, and log-search alert rules.",
-    why: "Composable operators let an investigator start with a time window, narrow to a service or result, and then summarize the signal without exporting the dataset.",
+      "Use it in Log Analytics and Application Insights to investigate issues, build dashboards, and create log alerts.",
+    why: "You can start with a time range, narrow the data to a service or result, then summarize it without exporting the records.",
     example:
-      "`AppRequests | where TimeGenerated > ago(1h) | summarize failures=countif(Success == false) by bin(TimeGenerated, 5m)` shows failed requests per five-minute interval when that table schema is available.",
+      "The query AppRequests | where TimeGenerated > ago(1h) | summarize failures=countif(Success == false) by bin(TimeGenerated, 5m) shows failed requests per five minutes when those fields exist.",
     operatorNote:
-      "Start with a bounded time range and `take` a few rows to learn the schema. Check table, timestamp column, casing, sampling, and ingestion delay before treating a zero result as proof of no traffic.",
+      "Start with a short time range and view a few rows to learn the table fields. Check the table, time field, spelling, sampling, and time before records appear before treating an empty result as proof that no requests occurred.",
     sources: [
       {
         label: "KQL in Azure Monitor Logs",
@@ -245,18 +243,19 @@ export const azureIntegrationTopics = [
     ],
   }),
   topic("Azure Monitor / alerting concepts", {
-    summary: "Signals, alert rules, and action groups that detect and route service conditions.",
+    summary:
+      "Monitoring data, alert rules, and actions that bring service problems to an owner's attention.",
     definition:
-      "Azure Monitor brings together metrics, logs, traces, and platform activity. An alert rule evaluates a signal against a condition and scope; an action group defines notifications or automated actions when the rule fires.",
+      "Azure Monitor collects metrics, logs, traces, and resource activity. An alert rule checks a signal against a condition and scope. An action group lists who or what to notify when the rule fires.",
     purpose:
-      "Surface actionable symptoms early, route them to an owner, and initiate a documented response.",
+      "Find important service problems early, send them to an owner, and start a known response.",
     usedWhen:
-      "Use metric alerts for numeric signals and log alerts for query-based conditions; select an appropriate evaluation period, threshold, severity, and routing action.",
-    why: "The alert rule turns telemetry into a response trigger, while a reusable action group centralizes who is notified and what automation runs.",
+      "Use metric alerts for numbers and log alerts for query results. Choose a time window, limit, severity, and notification route that fit the signal.",
+    why: "An alert rule turns monitoring data into a response. Action groups keep notification and automation settings in one place.",
     example:
-      "Alert when the oldest Service Bus message exceeds the agreed processing target for two evaluation periods, then route the alert to the integration on-call action group.",
+      "Alert when the oldest Service Bus message stays above the agreed processing limit for two checks, then notify the integration on-call team.",
     operatorNote:
-      "An alert is evidence to investigate, not proof of root cause. Check scope, signal, evaluation window, dimensions, state, suppression/processing rules, action-group delivery, and an actionable runbook.",
+      "Treat an alert as a reason to investigate. Check its scope, signal, time window, dimensions, state, suppression rules, notification delivery, and response guide.",
     sources: [
       {
         label: "Azure Monitor alerts overview",

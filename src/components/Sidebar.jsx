@@ -10,12 +10,12 @@ export default function Sidebar({ activeGroup, onSelect, hasDialog }) {
           </svg>
         </span>
         <span className="brand-name">
-          signal<span>/</span>room<small>INTEGRATION FIELD GUIDE</small>
+          signal<span>/</span>room<small>INTEGRATION GUIDE</small>
         </span>
       </a>
       <div className="rail-rule" />
       <nav className="chapter-nav" aria-label="Guide chapters">
-        <p className="nav-label">THE HANDBOOK</p>
+        <p className="nav-label">CHAPTERS</p>
         <button
           className={`nav-item ${activeGroup === "all" ? "is-active" : ""}`}
           aria-current={activeGroup === "all" ? "page" : undefined}
@@ -23,7 +23,7 @@ export default function Sidebar({ activeGroup, onSelect, hasDialog }) {
         >
           <span className="nav-icon nav-all">⌂</span>
           <span className="nav-copy">
-            All concepts<small>Browse the whole guide</small>
+            All topics<small>Browse the whole guide</small>
           </span>
           <span className="nav-count">{topics.length}</span>
         </button>
@@ -52,12 +52,12 @@ export default function Sidebar({ activeGroup, onSelect, hasDialog }) {
           <span className="callout-mark">↳</span>
           <div>
             <b>Start with the flow</b>
-            <p>Follow a message from entry point to recovery.</p>
+            <p>Follow a message from start to recovery.</p>
           </div>
         </div>
         <div className="rail-meta">
-          <span>REFERENCE / 01</span>
-          <span>AZURE + OPS</span>
+          <span>GUIDE / 01</span>
+          <span>AZURE + SUPPORT</span>
         </div>
       </div>
     </aside>

@@ -10,20 +10,21 @@ export default function TopicCollection({
   onOpenTopic,
 }) {
   const activeChapter = chapters.find((chapter) => chapter.id === activeGroup);
-  const sectionTitle = query ? "Search results" : (activeChapter?.short ?? "The field guide");
+  const sectionTitle = query ? "Search results" : (activeChapter?.short ?? "All topics");
   return (
-    <section className="topics-section" id="concepts" aria-labelledby="topics-title">
+    <section className="topics-section" id="topics" aria-labelledby="topics-title">
       <div className="section-heading">
         <div>
           <span className="eyebrow">
-            THE REFERENCE INDEX <span className="tiny-rule" />
+            BROWSE TOPICS <span className="tiny-rule" />
           </span>
           <h2 id="topics-title">
             {sectionTitle}
             <span className="heading-period">.</span>
           </h2>
           <p className="section-desc">
-            Select a concept for its definition, purpose, examples, sources, and operational notes.
+            Select a topic to read what it means, when it is useful, and see examples, sources, and
+            support notes.
           </p>
         </div>
         <div className="results-count">
@@ -39,13 +40,13 @@ export default function TopicCollection({
       </div>
 
       {activeGroup === "all" && !query && (
-        <div className="chapter-pills" aria-label="Filter concepts by chapter">
+        <div className="chapter-pills" aria-label="Filter topics by chapter">
           <button
             className="chapter-pill is-selected"
             aria-pressed="true"
             onClick={() => onSelectGroup("all")}
           >
-            All practices <span>{topics.length}</span>
+            All topics <span>{topics.length}</span>
           </button>
           {chapters.map((chapter) => (
             <button
@@ -75,10 +76,10 @@ export default function TopicCollection({
       ) : (
         <div className="empty-state">
           <span className="empty-mark">⌕</span>
-          <h3>No concept found</h3>
-          <p>Try a service name, pattern, or support term.</p>
+          <h3>No topics found</h3>
+          <p>Try a product name, message type, or support term.</p>
           <button onClick={onClear}>
-            Clear search and filters <span aria-hidden="true">↗</span>
+            Clear search and chapter filters <span aria-hidden="true">↗</span>
           </button>
         </div>
       )}

@@ -19,7 +19,7 @@ export default function TopicCard({ item, index, onOpen }) {
       <button
         type="button"
         className="topic-card-hit"
-        aria-label={`Open notes for ${item.title}`}
+        aria-label={`Open topic: ${item.title}`}
         onClick={(event) => onOpen(item, event.currentTarget)}
       />
     </article>

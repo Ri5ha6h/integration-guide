@@ -4,35 +4,34 @@ const topic = (title, details) => createTopic("security", title, details);
 
 export const securityNetworkingTopics = [
   topic("Microsoft Entra ID / Azure AD fundamentals", {
-    summary: "The identity platform that authenticates people, applications, and workloads.",
+    summary: "The cloud identity service for people, apps, and workloads.",
     definition:
-      "Microsoft Entra ID is Microsoft's cloud identity and access management service; Azure Active Directory is its former name. It issues tokens and evaluates identity policies for supported apps and services, while Azure resource authorization is commonly controlled separately with Azure RBAC.",
-    purpose:
-      "Establish who or what is making a request and apply organization sign-in and access policies.",
+      "Microsoft Entra ID is Microsoft's cloud service for sign-in and identity access. Azure Active Directory is its former name. Entra ID issues tokens and checks sign-in rules; Azure RBAC usually controls access to Azure resources.",
+    purpose: "Confirm who or what is making a request and apply the organization's sign-in rules.",
     usedWhen:
-      "Use it for workforce and workload sign-in, application registrations, single sign-on, token issuance, Conditional Access, and identity governance.",
-    why: "Central identity makes access review, authentication policy, and sign-in investigation consistent across connected services.",
+      "Use it for employee and workload sign-in, app registrations, single sign-on, tokens, Conditional Access, and identity reviews.",
+    why: "One identity service makes sign-in rules, access reviews, and sign-in investigations consistent across connected services.",
     example:
-      "A client authenticates with Entra ID, receives an access token for the API's audience, and sends it to APIM, which validates its signature, issuer, audience, and claims.",
+      "A client signs in with Entra ID and gets a token for the API. APIM checks the token's signature, issuer, audience, and claims.",
     operatorNote:
-      "For an access failure, distinguish authentication from authorization. Inspect sign-in logs, tenant and object IDs, token audience/issuer, consent, Conditional Access result, and the target resource's role assignment.",
+      "Find out if the failure is sign-in or permission related. Check sign-in logs, tenant and object IDs, token audience and issuer, consent, Conditional Access, and the resource role.",
     sources: [
       { label: "Microsoft Entra documentation", url: "https://learn.microsoft.com/en-us/entra/" },
     ],
   }),
   topic("Managed Identity", {
-    summary: "An Azure-managed workload identity that avoids storing application credentials.",
+    summary: "An Azure identity for a workload, with credentials managed by Azure.",
     definition:
-      "A managed identity is a Microsoft Entra identity assigned to a supported Azure resource. The workload obtains tokens for supported services, while Azure manages the identity's credentials; system-assigned identities follow the resource lifecycle, and user-assigned identities can be shared across resources.",
+      "A managed identity is an Entra identity assigned to an Azure resource. The workload gets tokens for supported services, and Azure manages its credentials. A system-assigned identity belongs to one resource; a user-assigned identity can be shared.",
     purpose:
-      "Authenticate a workload to another service without keeping a client secret or certificate in code or configuration.",
+      "Let an app or workflow sign in to another service without storing a password or certificate.",
     usedWhen:
-      "Use it when an Azure-hosted app or workflow needs to call a resource that accepts Microsoft Entra tokens, such as Key Vault, Storage, or Azure SQL.",
-    why: "Credential rotation is removed from application code, but permissions still need explicit least-privilege assignment and token use must be supported by the destination.",
+      "Use it when an Azure app needs to access a service that accepts Entra tokens, such as Key Vault, Storage, or Azure SQL.",
+    why: "The app does not manage a secret, but it still needs the right limited permissions and the target service must support this sign-in method.",
     example:
-      "Enable a Function App's managed identity and grant it `Storage Blob Data Reader` only on the container it needs; the function requests a token and reads the partner file.",
+      "Give a Function App identity Storage Blob Data Reader access to one container. The function gets a token and reads the partner file.",
     operatorNote:
-      "Verify the identity type and principal/object ID, token audience, destination support, network path, and role assignment at the intended scope. A newly changed assignment can take time to become effective.",
+      "Check the identity type and object ID, token audience, target service support, network route, and role at the correct scope. A new role can take time to work.",
     sources: [
       {
         label: "Managed identities overview for developers",
@@ -41,18 +40,17 @@ export const securityNetworkingTopics = [
     ],
   }),
   topic("Role-based access control (RBAC)", {
-    summary: "Authorization that grants a principal a role over a defined resource scope.",
+    summary: "Permissions that give a person or app selected actions on selected resources.",
     definition:
-      "An Azure role assignment connects a security principal, a role definition (allowed actions), and a scope such as a resource, resource group, subscription, or management group. Azure RBAC controls Azure resource access; it is distinct from Microsoft Entra directory roles and many service-specific data-plane permissions.",
-    purpose:
-      "Grant each person or workload only the actions required on the resources it must operate.",
+      "An Azure role assignment links a person or app, a role with allowed actions, and a scope such as a resource, group, subscription, or management group. Azure RBAC differs from Entra directory roles and from service-specific data permissions.",
+    purpose: "Give each person or app only the actions it needs on the resources it must use.",
     usedWhen:
-      "Use it for Azure control-plane access and for data-plane access where the service supports RBAC authorization.",
-    why: "Explicit roles and narrow scopes make access auditable and limit the effect of a compromised account or misconfiguration.",
+      "Use Azure RBAC for Azure resource management and for data access when the service supports it.",
+    why: "Clear roles and narrow scopes make access easier to review and limit the effect of a stolen account or mistake.",
     example:
-      "Give a deployment identity `Website Contributor` on one app resource while a runtime identity gets `Key Vault Secrets User` only on the required vault.",
+      "Give a deployment app Website Contributor on one app. Give a runtime app Key Vault Secrets User only on the vault it needs.",
     operatorNote:
-      "Check the principal ID, role, assignment scope, inherited roles, deny assignments, and whether the failure is control-plane or data-plane. Confirm that the chosen role includes the needed action.",
+      "Check the person or app ID, role, scope, inherited roles, deny rules, and whether the failure is on resource management or data access. Confirm the role allows the needed action.",
     sources: [
       {
         label: "Understand Azure role assignments",
@@ -60,19 +58,18 @@ export const securityNetworkingTopics = [
       },
     ],
   }),
-  topic("MFA", {
-    summary: "A sign-in check that requires more than one kind of identity proof.",
+  topic("Multifactor authentication (MFA)", {
+    summary: "A sign-in check that asks for two or more types of proof.",
     definition:
-      "Multifactor authentication requires two or more factors, typically something a person knows, possesses, or is. Microsoft Entra can apply MFA through tenant defaults or Conditional Access policy based on sign-in context.",
-    purpose:
-      "Reduce the chance that a stolen or guessed password alone is enough to access an account.",
+      "Multifactor authentication (MFA) uses at least two types of proof, such as something a person knows, has, or is. Entra ID can require MFA through tenant settings or Conditional Access rules.",
+    purpose: "Make a stolen or guessed password alone insufficient to sign in.",
     usedWhen:
-      "Require it for interactive user access, especially privileged operations, remote access, or sign-ins flagged by organizational policy.",
-    why: "An independent factor adds a check at authentication time; phishing-resistant methods offer stronger protection against adversary-in-the-middle attacks than a password alone.",
+      "Require it for interactive sign-in, especially for administrator tasks, remote access, or sign-ins covered by company policy.",
+    why: "A second proof adds protection. Passkeys and other phishing-resistant methods offer stronger protection than a password alone.",
     example:
-      "A helpdesk analyst signs in with a passkey and is prompted for an approved step-up challenge before accessing a privileged portal from an unmanaged device.",
+      "A support analyst signs in with a passkey and must complete another approved check before opening an administrator portal from an unmanaged device.",
     operatorNote:
-      "Use sign-in logs to check the applied Conditional Access policy, authentication requirement and method, device state, location/risk, and any exclusion or break-glass account handling.",
+      "Check sign-in logs for the Conditional Access rule, required sign-in method, device state, location or risk, and any exception or emergency account.",
     sources: [
       {
         label: "Microsoft Entra multifactor authentication overview",
@@ -80,19 +77,18 @@ export const securityNetworkingTopics = [
       },
     ],
   }),
-  topic("PIM / Just-in-Time access", {
-    summary: "Temporary activation of privileged roles only when a task requires them.",
+  topic("Temporary privileged access (PIM)", {
+    summary: "Temporary access to an administrator role when a task needs it.",
     definition:
-      "Microsoft Entra Privileged Identity Management manages eligible and active privileged role assignments. An eligible user activates a role for a configured period and may need to complete MFA, provide justification, or obtain approval.",
+      "Microsoft Entra Privileged Identity Management manages administrator roles. A person can be eligible for a role and activate it for a set time. Activation may require MFA, a reason, or approval.",
     purpose:
-      "Limit always-on privilege and provide an auditable activation record for administrative work.",
-    usedWhen:
-      "Use it for infrequent administrator tasks and sensitive resource operations where permanent broad roles are unnecessary.",
-    why: "JIT access reduces the time a privileged role is available and creates a reviewable request and activation trail.",
+      "Reduce the time that administrator access is active and keep a record of each request.",
+    usedWhen: "Use it for occasional administrator work when permanent broad access is not needed.",
+    why: "Temporary access limits how long a role is available and records who activated it and why.",
     example:
-      "An engineer activates an eligible subscription role for 60 minutes with a change-ticket number, performs a deployment fix, then loses the elevated assignment when the activation expires.",
+      "An engineer activates a subscription role for 60 minutes, adds a change-ticket number, fixes a deployment, and loses the role when the time ends.",
     operatorNote:
-      "Check eligibility, approval and MFA settings, activation duration, scope, justification/ticket, audit history, and whether the assignment is active or only eligible. Follow the documented emergency-access process for outages.",
+      "Check eligibility, approval and MFA rules, activation time, scope, reason or ticket, and audit history. Use the emergency access process during an outage.",
     sources: [
       {
         label: "What is Privileged Identity Management?",
@@ -101,18 +97,18 @@ export const securityNetworkingTopics = [
     ],
   }),
   topic("Virtual Network (VNet)", {
-    summary: "An Azure private network boundary for addressing, routing, and segmentation.",
+    summary: "A private Azure network that controls addresses, routes, and network separation.",
     definition:
-      "A VNet is a logically isolated network with address spaces and subnets. Azure resources attach network interfaces or private endpoints to subnets and communicate through configured routes, security rules, peering, gateways, and DNS.",
+      "A VNet is an isolated network with address ranges and subnets. Resources connect through network interfaces or private endpoints. Routes, security rules, peering, gateways, and DNS control how they communicate.",
     purpose:
-      "Define where private workloads connect and how traffic reaches other subnets, on-premises networks, or public endpoints.",
+      "Choose where private workloads connect and how they reach other subnets, local networks, or public services.",
     usedWhen:
-      "Use it when services need private addressing, controlled east-west traffic, private endpoint access, or hybrid connectivity.",
-    why: "Network boundaries and routes make allowed communication explicit. A VNet alone does not provide application authorization or guarantee that a PaaS endpoint is private.",
+      "Use a VNet when services need private addresses, controlled traffic between subnets, private endpoints, or a link to a local network.",
+    why: "Network boundaries and routes show which traffic can pass. A VNet does not control what an app user can do or make every service private.",
     example:
-      "Place an integration worker in an app subnet, a private endpoint in an endpoint subnet, and route DNS through the hub resolver used by connected spokes.",
+      "Put an integration worker in an app subnet and a private endpoint in another subnet. Send DNS requests through the hub resolver shared with connected networks.",
     operatorNote:
-      "Trace source and destination addresses, subnet/NSG rules, user-defined routes, peering, gateway propagation, and DNS separately. Confirm return routing as well as the outbound path.",
+      "Check the source and destination addresses, subnet and NSG rules, custom routes, peering, gateway routes, and DNS. Check the return route too.",
     sources: [
       {
         label: "Azure virtual network overview",
@@ -121,18 +117,17 @@ export const securityNetworkingTopics = [
     ],
   }),
   topic("Private Endpoints", {
-    summary: "A private IP in a VNet that connects to a supported Azure service over Private Link.",
+    summary: "A private IP address in a VNet for reaching a supported Azure service.",
     definition:
-      "A private endpoint is a network interface with a private IP address in a VNet, mapped to a Private Link resource. Network reachability, endpoint approval, service firewalls, public access settings, and DNS all affect whether a client can use it.",
-    purpose:
-      "Give clients a private network path to a supported service without resolving its service name to a public endpoint.",
+      "A private endpoint is a network interface with a private IP in a VNet. It connects to an Azure service through Private Link. Approval, DNS, routes, firewalls, and public access settings all affect the connection.",
+    purpose: "Let a client reach a supported service over a private address.",
     usedWhen:
-      "Use it for services such as Storage and SQL when private access is required from Azure or connected on-premises networks.",
-    why: "Private Link makes the service reachable on a private address, but the client still needs correct DNS, authorization, and routing.",
+      "Use private endpoints for services such as Storage and SQL when Azure or a connected local network needs private access.",
+    why: "Private Link provides a private network path. The client still needs correct DNS, permission, and routing.",
     example:
-      "A Function resolves `account.blob.core.windows.net` through the linked private DNS zone to the private endpoint IP, then authenticates with its managed identity.",
+      "A Function App looks up account.blob.core.windows.net. A linked private DNS zone returns the private endpoint address, and the app signs in with its managed identity.",
     operatorNote:
-      "Check endpoint connection state/approval, NIC private IP, private DNS zone and VNet link, actual client resolver result, route, NSG, and service-level public network setting.",
+      "Check endpoint approval, private IP, DNS zone and VNet link, the client's DNS result, route, NSG, and the service's public access setting.",
     sources: [
       {
         label: "What is a private endpoint?",
@@ -145,18 +140,17 @@ export const securityNetworkingTopics = [
     ],
   }),
   topic("ExpressRoute", {
-    summary: "Private connectivity from an organization network to Microsoft cloud services.",
+    summary: "A private network link between an organization and Microsoft cloud services.",
     definition:
-      "ExpressRoute extends an on-premises or colocation network to Microsoft cloud through a connectivity provider and private peering. Circuit, peering, gateway, routing, and resilience design determine which Azure networks are reachable.",
-    purpose:
-      "Provide hybrid network connectivity with controlled routing and predictable characteristics for supported Microsoft cloud paths.",
+      "ExpressRoute connects a local or colocation network to Microsoft cloud through a provider and private peering. The circuit, peering, gateway, and routes determine which Azure networks can be reached.",
+    purpose: "Connect an organization's network to Azure through a planned private route.",
     usedWhen:
-      "Use it when an organization needs private WAN connectivity, high-throughput data exchange, or enterprise network integration with Azure.",
-    why: "Traffic uses the configured provider/private peering path rather than traversing the public internet, but private connectivity does not encrypt application data by itself or replace network security controls.",
+      "Use it when an organization needs private network access, high data capacity, or a link between its network and Azure.",
+    why: "Traffic follows the provider's private route instead of the public internet. ExpressRoute does not encrypt application data or replace network security rules.",
     example:
-      "An on-premises EDI gateway reaches a private endpoint in a hub VNet through ExpressRoute and a connected virtual network gateway, with DNS forwarded to the hub resolver.",
+      "An on-site EDI gateway reaches a private endpoint in an Azure hub VNet through ExpressRoute and a virtual network gateway. DNS requests go to the hub resolver.",
     operatorNote:
-      "Check provider circuit state, peering/BGP routes, Azure gateway, route filters where relevant, effective routes, DNS forwarding, and end-to-end packet path. Keep a tested alternate path if the service requires resilient hybrid access.",
+      "Check provider circuit status, peering and BGP routes, Azure gateway, route filters, effective routes, DNS forwarding, and the full packet path. Keep a tested backup route if the service needs one.",
     sources: [
       {
         label: "Azure ExpressRoute overview",
@@ -164,19 +158,18 @@ export const securityNetworkingTopics = [
       },
     ],
   }),
-  topic("IP whitelisting / filtering", {
-    summary: "Network rules that permit or deny traffic from selected IP ranges.",
+  topic("IP address filtering", {
+    summary: "Rules that allow or block traffic from selected IP addresses.",
     definition:
-      "IP allowlisting/filtering compares a connection's observed source or destination address with configured network rules. The feature may live in a firewall, NSG, service firewall, WAF, partner gateway, or APIM policy, each at a different traffic layer.",
-    purpose:
-      "Reduce which network locations can reach an endpoint or API and block traffic outside an agreed boundary.",
+      "An IP rule compares a connection's address with an allowed or blocked range. Rules can be in a firewall, network security group (NSG), service firewall, WAF, partner gateway, or APIM. Each checks traffic at a different point.",
+    purpose: "Limit which network addresses can reach a service or API.",
     usedWhen:
-      "Use it as one control for partner ingress, administration, or service endpoints when the peer has stable egress addresses and the actual path preserves the expected source IP.",
-    why: "A narrow allowlist reduces exposure, but IP address is not a user identity and proxy/NAT changes can alter the source seen by the rule.",
+      "Use it for partner connections, administration, or service access when the other side has stable addresses and the connection path preserves them.",
+    why: "A short allowlist can reduce exposure. An IP address does not identify a person, and a proxy or address change can alter what the rule sees.",
     example:
-      "A partner AS2 endpoint accepts HTTPS only from the partner's documented NAT ranges; the security team updates the list during a coordinated address rotation.",
+      "An AS2 service accepts HTTPS only from the partner's approved network ranges. The security team updates the rules when the partner changes those addresses.",
     operatorNote:
-      "Compare the denied source IP in the correct hop's logs with the exact rule, prefix length, NAT/proxy path, IPv4/IPv6, and deployment scope. Keep an owner and review date for temporary entries.",
+      "Compare the blocked address in the correct network log with the rule, address range, proxy or NAT path, IP version, and deployment scope. Give temporary rules an owner and review date.",
     sources: [
       {
         label: "WAF custom rules for Azure Front Door",
@@ -185,18 +178,18 @@ export const securityNetworkingTopics = [
     ],
   }),
   topic("DNS / network troubleshooting", {
-    summary: "A layered method for finding name-resolution and connectivity failures.",
+    summary: "A step-by-step way to find name lookup and connection problems.",
     definition:
-      "DNS maps names to addresses and can return different results based on resolver and network context. Network troubleshooting follows a request from name resolution through route, transport handshake, gateway, and application response instead of assuming all failures are firewall blocks.",
+      "DNS maps names to addresses, and the answer can differ by resolver and network. Trace each request through name lookup, route, connection, TLS, gateway, and application response to find the first failing step.",
     purpose:
-      "Identify the first failing hop and distinguish incorrect DNS, missing routes, blocked ports, TLS problems, and application errors.",
+      "Tell apart wrong DNS, missing routes, blocked ports, TLS errors, and application failures.",
     usedWhen:
-      "Use it for private endpoint issues, cross-premises access, unhealthy origins, API timeouts, and certificate-name mismatches.",
-    why: "A hostname resolving to the public IP instead of a private endpoint, or a one-way route, can look like an application outage even though the root cause is network configuration.",
+      "Use it for private endpoint problems, access between networks, unhealthy backends, API timeouts, and certificate name errors.",
+    why: "Wrong DNS or a missing return route can look like an application outage even when the app is healthy.",
     example:
-      "From the affected workload, resolve the service FQDN, compare it with the intended private endpoint IP, test the expected port, inspect route/NSG path, then capture TLS and HTTP status.",
+      "From the failing workload, look up the service name and check that it returns the expected private IP. Test the port, route, security rules, TLS, and HTTP response.",
     operatorNote:
-      "Run checks from the same subnet and resolver as the failing caller. Record the exact FQDN, returned IP, timestamp, source, port, TLS error, and request ID; compare with a known-good path.",
+      "Run checks from the same subnet and DNS resolver as the failing app. Record the name, returned IP, time, source, port, TLS error, and request ID. Compare with a working path.",
     sources: [
       {
         label: "Private endpoint DNS configuration",
@@ -205,18 +198,17 @@ export const securityNetworkingTopics = [
     ],
   }),
   topic("TLS / HTTPS", {
-    summary: "Transport protection that encrypts traffic and authenticates the server endpoint.",
+    summary: "A secure connection that encrypts traffic and checks the server's identity.",
     definition:
-      "TLS negotiates cryptographic protection between peers; HTTPS is HTTP carried over TLS. Certificate chain, hostname, trust store, protocol version, cipher policy, and SNI all affect a successful handshake.",
-    purpose:
-      "Protect data in transit from passive reading and tampering, and let a client verify that it reached the intended server.",
+      "TLS protects a connection between two systems. HTTPS is HTTP over TLS. The certificate chain, server name, trusted certificate list, protocol version, cipher rules, and server name indication (SNI) can affect the connection.",
+    purpose: "Protect data in transit and let a client check that it reached the intended server.",
     usedWhen:
-      "Use it for browser and API traffic, service-to-service calls, partner endpoints, and any network hop that carries credentials or business data.",
-    why: "Encryption and endpoint authentication reduce interception and impersonation risks. TLS does not decide whether the authenticated caller may access a business operation.",
+      "Use it for websites, APIs, service calls, partner endpoints, and any network link that carries passwords or business data.",
+    why: "Encryption and server checks reduce the risk of someone reading data or pretending to be the server. TLS does not decide what the signed-in caller may do.",
     example:
-      "A partner connects to `edi.example.net` over HTTPS; the client validates the presented chain and DNS hostname before posting a signed AS2 package.",
+      "A partner connects to edi.example.net over HTTPS. Its client checks the certificate chain and server name before sending a signed AS2 package.",
     operatorNote:
-      "Inspect the peer's served certificate chain, hostname/SNI, expiry, trust roots, negotiated TLS version, and clock. Check TLS termination and re-encryption separately at Front Door, APIM, and the backend.",
+      "Check the certificate chain, server name and SNI, expiry, trusted roots, negotiated TLS version, and system clock. Check TLS separately at Front Door, APIM, and the backend.",
     sources: [
       {
         label: "TLS protocol documentation",
@@ -225,18 +217,18 @@ export const securityNetworkingTopics = [
     ],
   }),
   topic("Certificate management & expiry monitoring", {
-    summary: "Inventorying, renewing, deploying, and verifying certificates before trust breaks.",
+    summary: "Tracking, renewing, installing, and checking certificates before they expire.",
     definition:
-      "Certificate lifecycle management tracks certificate purpose, owner, subject/SANs, issuer, private-key storage, trust chain, deployment points, rotation, and revocation. Expiration monitoring should observe the certificate actually served by each endpoint as well as the inventory record.",
+      "Certificate management tracks the certificate's purpose, owner, names, issuer, private key, trust chain, installed locations, renewal, and revocation. Check the certificate served by each endpoint as well as the stored record.",
     purpose:
-      "Prevent endpoint outages and failed partner authentication caused by expired, mismatched, untrusted, or incorrectly deployed certificates.",
+      "Prevent failed web connections, partner sign-in, or signed messages caused by expired or incorrect certificates.",
     usedWhen:
-      "Use it for web/API TLS, AS2 signing or encryption, mutual TLS, service identities, and trust stores.",
-    why: "A certificate may be renewed in a vault but remain expired at a gateway or peer; inventory plus post-deployment probing closes that operational gap.",
+      "Use it for web and API TLS, AS2 signing or encryption, mutual TLS, service identities, and trusted certificate stores.",
+    why: "A renewed certificate in a vault may still be missing from a gateway or partner system. Check the live endpoint after every renewal.",
     example:
-      "Alert at 60, 30, and 7 days before expiry for each production AS2 partner certificate; rotate with a partner-agreed overlap and verify a signed test exchange after cutover.",
+      "Alert 60, 30, and 7 days before an AS2 partner certificate expires. Agree on an overlap, rotate the certificate, and test a signed exchange.",
     operatorNote:
-      "Track endpoint, certificate thumbprint/serial, owner, expiry, key location, renewal lead time, peer notification, and last successful probe. Never expose private key material in alerts or tickets.",
+      "Track the endpoint, certificate ID, owner, expiry, key location, renewal date, partner notice, and last successful check. Keep private keys out of alerts and tickets.",
     sources: [
       {
         label: "Azure Key Vault certificate overview",
