@@ -32,10 +32,14 @@ function App() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [closeTopic, selectedTopic]);
 
-  const visibleTopics = useMemo(() => topics.filter((item) => {
-    const inGroup = activeGroup === "all" || item.group === activeGroup;
-    return inGroup && matchesTopic(item, query);
-  }), [activeGroup, query]);
+  const visibleTopics = useMemo(
+    () =>
+      topics.filter((item) => {
+        const inGroup = activeGroup === "all" || item.group === activeGroup;
+        return inGroup && matchesTopic(item, query);
+      }),
+    [activeGroup, query],
+  );
 
   const clearFilters = () => {
     setQuery("");
@@ -44,9 +48,18 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar activeGroup={activeGroup} onSelect={setActiveGroup} hasDialog={Boolean(selectedTopic)} />
+      <Sidebar
+        activeGroup={activeGroup}
+        onSelect={setActiveGroup}
+        hasDialog={Boolean(selectedTopic)}
+      />
       <main id="top" className="main-content" inert={Boolean(selectedTopic)}>
-        <TopBar activeGroup={activeGroup} query={query} onQueryChange={setQuery} searchRef={searchRef} />
+        <TopBar
+          activeGroup={activeGroup}
+          query={query}
+          onQueryChange={setQuery}
+          searchRef={searchRef}
+        />
         <div className="content-wrap">
           <GuideHero />
           <TopicCollection
@@ -60,7 +73,12 @@ function App() {
               setSelectedTopic(item);
             }}
           />
-          <footer className="page-footer"><span>FIELD GUIDE / INTEGRATION SYSTEMS</span><span>BUILT FOR THE ON-CALL AND THE CURIOUS <b>·</b> 2026</span></footer>
+          <footer className="page-footer">
+            <span>FIELD GUIDE / INTEGRATION SYSTEMS</span>
+            <span>
+              BUILT FOR THE ON-CALL AND THE CURIOUS <b>·</b> 2026
+            </span>
+          </footer>
         </div>
       </main>
       <TopicDrawer item={selectedTopic} onClose={closeTopic} />
