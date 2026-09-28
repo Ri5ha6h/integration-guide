@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import AbbreviationDialog from "./components/AbbreviationDialog.jsx";
 import GuideHero from "./components/GuideHero.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import TopicCollection from "./components/TopicCollection.jsx";
@@ -12,25 +13,40 @@ function App() {
   const [activeGroup, setActiveGroup] = useState("all");
   const [query, setQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [isAbbreviationOpen, setIsAbbreviationOpen] = useState(false);
   const searchRef = useRef(null);
   const cardTriggerRef = useRef(null);
+  const abbreviationTriggerRef = useRef(null);
 
   const closeTopic = useCallback(() => {
     setSelectedTopic(null);
     window.requestAnimationFrame(() => cardTriggerRef.current?.focus());
   }, []);
 
+  const closeAbbreviations = useCallback(() => {
+    setIsAbbreviationOpen(false);
+    window.requestAnimationFrame(() => abbreviationTriggerRef.current?.focus());
+  }, []);
+
   useEffect(() => {
     const onKeyDown = (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      if (
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLowerCase() === "k" &&
+        !selectedTopic &&
+        !isAbbreviationOpen
+      ) {
         event.preventDefault();
         searchRef.current?.focus();
       }
-      if (event.key === "Escape" && selectedTopic) closeTopic();
+      if (event.key === "Escape") {
+        if (selectedTopic) closeTopic();
+        else if (isAbbreviationOpen) closeAbbreviations();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeTopic, selectedTopic]);
+  }, [closeAbbreviations, closeTopic, isAbbreviationOpen, selectedTopic]);
 
   const visibleTopics = useMemo(
     () =>
@@ -51,14 +67,16 @@ function App() {
       <Sidebar
         activeGroup={activeGroup}
         onSelect={setActiveGroup}
-        hasDialog={Boolean(selectedTopic)}
+        hasDialog={Boolean(selectedTopic || isAbbreviationOpen)}
       />
-      <main id="top" className="main-content" inert={Boolean(selectedTopic)}>
+      <main id="top" className="main-content" inert={Boolean(selectedTopic || isAbbreviationOpen)}>
         <TopBar
           activeGroup={activeGroup}
           query={query}
           onQueryChange={setQuery}
           searchRef={searchRef}
+          abbreviationButtonRef={abbreviationTriggerRef}
+          onOpenAbbreviations={() => setIsAbbreviationOpen(true)}
         />
         <div className="content-wrap">
           <GuideHero />
@@ -82,6 +100,7 @@ function App() {
         </div>
       </main>
       <TopicDrawer item={selectedTopic} onClose={closeTopic} />
+      {isAbbreviationOpen && <AbbreviationDialog onClose={closeAbbreviations} />}
     </div>
   );
 }

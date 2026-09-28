@@ -235,6 +235,36 @@
 .breadcrumb span:last-child {
   color: var(--navy-blue);
 }
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.abbreviation-trigger {
+  display: inline-flex;
+  height: 34px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid var(--ice-blue);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--mist-blue) 53%, transparent);
+  color: var(--navy-blue);
+  font-size: 10px;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+.abbreviation-trigger:hover {
+  border-color: var(--signal-blue);
+  background: var(--mist-blue);
+}
+.abbreviation-trigger-mark {
+  color: var(--signal-blue);
+  font: 10px var(--mono);
+}
 .search-wrap {
   display: flex;
   width: 244px;
@@ -1296,5 +1326,185 @@
   }
   .detail-note p {
     font-size: 10px;
+  }
+}
+
+.abbreviation-dialog-shade {
+  position: fixed;
+  z-index: 11;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+}
+.abbreviation-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: color-mix(in srgb, var(--ink-blue) 48%, transparent);
+  backdrop-filter: blur(2px);
+  animation: shade-in 0.18s ease both;
+  cursor: pointer;
+}
+.abbreviation-dialog {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: min(780px, 100%);
+  max-height: min(82vh, 820px);
+  flex-direction: column;
+  overflow: hidden;
+  padding: 26px clamp(20px, 4vw, 38px) 24px;
+  border: 1px solid var(--ice-blue);
+  border-radius: 5px;
+  background: var(--mist-blue);
+  box-shadow: 0 20px 65px color-mix(in srgb, var(--ink-blue) 28%, transparent);
+  animation: dialog-in 0.18s ease both;
+}
+.abbreviation-dialog-topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+.abbreviation-dialog-topline .eyebrow {
+  color: var(--signal-blue);
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+.abbreviation-dialog-topline h2 {
+  margin: 8px 0 0;
+  color: var(--ink-blue);
+  font: 500 clamp(28px, 4vw, 38px)/1.05 var(--display);
+  letter-spacing: -0.04em;
+}
+.abbreviation-intro {
+  margin: 9px 0 18px;
+  color: var(--signal-blue);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.abbreviation-filter-label {
+  margin-bottom: 6px;
+  color: var(--navy-blue);
+  font-size: 10px;
+  font-weight: 600;
+}
+.abbreviation-filter {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--ice-blue);
+  border-radius: 3px;
+  background: color-mix(in srgb, white 55%, var(--mist-blue));
+  color: var(--ink-blue);
+  font-size: 11px;
+}
+.abbreviation-filter::placeholder {
+  color: var(--steel-blue);
+}
+.abbreviation-count {
+  margin: 9px 0 8px;
+  color: var(--steel-blue);
+  font: 8px var(--mono);
+  letter-spacing: 0.035em;
+}
+.abbreviation-list-wrap {
+  min-height: 0;
+  overflow-y: auto;
+  border-top: 1px solid var(--ice-blue);
+  scrollbar-color: var(--ice-blue) transparent;
+}
+.abbreviation-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  margin: 0;
+}
+.abbreviation-entry {
+  display: grid;
+  grid-template-columns: 65px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  padding: 12px 0 11px;
+  border-bottom: 1px solid var(--ice-blue);
+}
+.abbreviation-entry[hidden],
+.abbreviation-empty[hidden] {
+  display: none;
+}
+.abbreviation-entry dt {
+  color: var(--signal-blue);
+  font: 600 10px var(--mono);
+  overflow-wrap: anywhere;
+}
+.abbreviation-entry dd {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.abbreviation-entry strong {
+  color: var(--navy-blue);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.abbreviation-entry dd span {
+  color: var(--steel-blue);
+  font-size: 9px;
+  line-height: 1.5;
+}
+.abbreviation-empty {
+  margin: 0;
+  padding: 24px 4px;
+  color: var(--steel-blue);
+  font-size: 11px;
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0.75;
+    transform: translateY(7px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@media (max-width: 600px) {
+  .topbar {
+    height: auto;
+    min-height: 54px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block: 8px;
+  }
+  .topbar-actions {
+    width: 100%;
+    gap: 7px;
+  }
+  .abbreviation-trigger {
+    height: 32px;
+    gap: 5px;
+    padding-inline: 7px;
+    font-size: 9px;
+  }
+  .search-wrap {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+  }
+  .abbreviation-dialog-shade {
+    padding: 12px;
+  }
+  .abbreviation-dialog {
+    max-height: 88vh;
+    padding: 21px 17px 16px;
+  }
+  .abbreviation-dialog-topline h2 {
+    font-size: 30px;
+  }
+  .abbreviation-list {
+    grid-template-columns: 1fr;
   }
 }
