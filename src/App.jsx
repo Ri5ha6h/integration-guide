@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar.jsx";
 import TopicCollection from "./components/TopicCollection.jsx";
 import TopicDrawer from "./components/TopicDrawer.jsx";
 import TopBar from "./components/TopBar.jsx";
+import VideoReferenceDialog from "./components/VideoReferenceDialog.jsx";
 import { topics } from "./utils/topicCatalog.js";
 import { matchesTopic } from "./utils/searchTopics.js";
 import "./App.css";
@@ -14,9 +15,11 @@ function App() {
   const [query, setQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [isAbbreviationOpen, setIsAbbreviationOpen] = useState(false);
+  const [isVideoReferencesOpen, setIsVideoReferencesOpen] = useState(false);
   const searchRef = useRef(null);
   const cardTriggerRef = useRef(null);
   const abbreviationTriggerRef = useRef(null);
+  const videoReferencesTriggerRef = useRef(null);
 
   const closeTopic = useCallback(() => {
     setSelectedTopic(null);
@@ -28,13 +31,19 @@ function App() {
     window.requestAnimationFrame(() => abbreviationTriggerRef.current?.focus());
   }, []);
 
+  const closeVideoReferences = useCallback(() => {
+    setIsVideoReferencesOpen(false);
+    window.requestAnimationFrame(() => videoReferencesTriggerRef.current?.focus());
+  }, []);
+
   useEffect(() => {
     const onKeyDown = (event) => {
       if (
         (event.metaKey || event.ctrlKey) &&
         event.key.toLowerCase() === "k" &&
         !selectedTopic &&
-        !isAbbreviationOpen
+        !isAbbreviationOpen &&
+        !isVideoReferencesOpen
       ) {
         event.preventDefault();
         searchRef.current?.focus();
@@ -42,11 +51,19 @@ function App() {
       if (event.key === "Escape") {
         if (selectedTopic) closeTopic();
         else if (isAbbreviationOpen) closeAbbreviations();
+        else if (isVideoReferencesOpen) closeVideoReferences();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeAbbreviations, closeTopic, isAbbreviationOpen, selectedTopic]);
+  }, [
+    closeAbbreviations,
+    closeTopic,
+    closeVideoReferences,
+    isAbbreviationOpen,
+    isVideoReferencesOpen,
+    selectedTopic,
+  ]);
 
   const visibleTopics = useMemo(
     () =>
@@ -67,9 +84,13 @@ function App() {
       <Sidebar
         activeGroup={activeGroup}
         onSelect={setActiveGroup}
-        hasDialog={Boolean(selectedTopic || isAbbreviationOpen)}
+        hasDialog={Boolean(selectedTopic || isAbbreviationOpen || isVideoReferencesOpen)}
       />
-      <main id="top" className="main-content" inert={Boolean(selectedTopic || isAbbreviationOpen)}>
+      <main
+        id="top"
+        className="main-content"
+        inert={Boolean(selectedTopic || isAbbreviationOpen || isVideoReferencesOpen)}
+      >
         <TopBar
           activeGroup={activeGroup}
           query={query}
@@ -77,6 +98,8 @@ function App() {
           searchRef={searchRef}
           abbreviationButtonRef={abbreviationTriggerRef}
           onOpenAbbreviations={() => setIsAbbreviationOpen(true)}
+          videoReferencesButtonRef={videoReferencesTriggerRef}
+          onOpenVideoReferences={() => setIsVideoReferencesOpen(true)}
         />
         <div className="content-wrap">
           <GuideHero />
@@ -101,6 +124,7 @@ function App() {
       </main>
       <TopicDrawer item={selectedTopic} onClose={closeTopic} />
       {isAbbreviationOpen && <AbbreviationDialog onClose={closeAbbreviations} />}
+      {isVideoReferencesOpen && <VideoReferenceDialog onClose={closeVideoReferences} />}
     </div>
   );
 }
