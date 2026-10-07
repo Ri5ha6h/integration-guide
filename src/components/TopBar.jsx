@@ -7,6 +7,8 @@ export default function TopBar({
   searchRef,
   abbreviationButtonRef,
   onOpenAbbreviations,
+  videoReferencesButtonRef,
+  onOpenVideoReferences,
 }) {
   const chapter = activeGroup === "all" ? null : findChapter(activeGroup);
   const sectionName =
@@ -33,6 +35,20 @@ export default function TopBar({
           </span>
           <span className="abbreviation-trigger-label" aria-hidden="true">
             Abbreviation cheatsheet
+          </span>
+        </button>
+        <button
+          ref={videoReferencesButtonRef}
+          type="button"
+          className="video-reference-trigger"
+          onClick={onOpenVideoReferences}
+          aria-label="Open video references"
+        >
+          <span className="video-reference-trigger-mark" aria-hidden="true">
+            ▷
+          </span>
+          <span className="video-reference-trigger-label" aria-hidden="true">
+            Video references
           </span>
         </button>
         <div className="search-wrap">
